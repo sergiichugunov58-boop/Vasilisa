@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="ru" x-data="app()" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Василиса — Юный Ресторанный Критик</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+
+  <script>
+    // ============================================================
+    // CONFIG — Все тексты, данные, ссылки редактируются здесь
+    // ============================================================
+    window.CONFIG = {
+      name: "Василиса",
+      age: 8,
+      fullName: "Василиса Громова",
+      tagline: "Юный пищевой обозреватель & будущий ресторанный критик",
+      heroSubtitle: "8 лет. 200+ ресторанов. Честные отзывы с первой ложки.",
+      about: {
+        title: "Кто такая Василиса?",
+        text: "Я — Василиса, мне 8 лет, и я уже знаю разницу между настоящим трюфелем и трюфельным маслом. Я пробую блюда в ресторанах Москвы и по всему миру, честно рассказываю о вкусе, подаче и атмосфере. Мои обзоры читают родители, которые хотят прийти в ресторан со своими детьми — и не разочароваться.",
+        quote: "«Если мне невкусно — я так и скажу. Даже если повар взрослый.»",
+      },
+      stats: [
+        { value: 200, suffix: "+", label: "Ресторанов посещено" },
+        { value: 47, suffix: "K", label: "Подписчиков в соцсетях" },
+        { value: 312, suffix: "", label: "Видео-обзоров" },
+        { value: 28, suffix: "", label: "Городов" },
+      ],
+      socials: [
+        {
+          platform: "YouTube",
+          handle: "@vasilisa_eats",
+          followers: "31K",
+          description: "Видео-обзоры ресторанов, мастер-классы с шефами",
+          url: "https://youtube.com",
+          color: "#FF4444",
+          icon: "▶",
+          gradient: "from-red-400 to-rose-600",
+        },
+        {
+          platform: "Instagram",
+          handle: "@vasilisa.food",
+          followers: "12K",
+          description: "Фото блюд, сторисы из ресторанов",
+          url: "https://instagram.com",
+          color: "#E1306C",
+          icon: "◈",
+          gradient: "from-pink-400 to-fuchsia-600",
+        },
+        {
+          platform: "TikTok",
+          handle: "@vasilisaeats",
+          followers: "4K",
+          description: "Короткие ролики и реакции на блюда",
+          url: "https://tiktok.com",
+          color: "#69C9D0",
+          icon: "♪",
+          gradient: "from-cyan-400 to-teal-600",
+        },
+        {
+          platform: "Telegram",
+          handle: "@vasilisa_review",
+          followers: "5K+",
+          description: "Эксклюзивные обзоры и рекомендации",
+          url: "https://t.me",
+          color: "#2AABEE",
+          icon: "✈",
+          gradient: "from-sky-400 to-blue-600",
+        },
+      ],
+      integrations: [
+        { brand: "Novikov Group", category: "Ресторанная группа", year: "2024" },
+        { brand: "White Rabbit", category: "Fine Dining", year: "2024" },
+        { brand: "Детский мир", category: "Ритейл партнёр", year: "2023" },
+        { brand: "Electrolux", category: "Бытовая техника", year: "2024" },
+        { brand: "Danone", category: "FMCG бренд", year: "2023" },
+        { brand: "Food.ru", category: "Медиа-партнёр", year: "2024" },
+      ],
+      mediakit: {
+        title: "Медиа-кит 2025",
+        subtitle: "Всё для успешного сотрудничества в одном документе",
+        reach: "47K+ охват",
+        engagement: "8.4% ER",
+        cpm: "от 800 ₽",
+        formats: ["Видео-интеграция", "Нативный обзор", "Сторис-пакет", "Совместный ивент"],
+      },
+      shop: [
+        {
+          name: "Дневник ресторанного критика",
+          price: "890 ₽",
+          description: "Красивый блокнот для записей о вкусах и впечатлениях",
+          tag: "Хит",
+          img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80",
+        },
+        {
+          name: "Стикеры «Оценки Василисы»",
+          price: "390 ₽",
+          description: "Набор наклеек с рейтингами и фирменными фразами",
+          tag: "Новинка",
+          img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+        },
+        {
+          name: "Поварской фартук мини",
+          price: "1 490 ₽",
+          description: "Фирменный фартук юного критика с вышивкой",
+          tag: "Мерч",
+          img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80",
+        },
+        {
+          name: "PDF: 50 лучших детских ресторанов Москвы",
+          price: "490 ₽",
+          description: "Гид от Василисы — проверено лично!",
+          tag: "Цифровой",
+          img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80",
+        },
+      ],
+      contact: {
+        email: "hello@vasilisa-eats.ru",
+        manager: "Мама Катя",
+        managerEmail: "mama@vasilisa-eats.ru",
+      },
+      comingSoon: [
+        { title: "Блог", icon: "✍", desc: "Авторские статьи и колонки" },
+        { title: "Подкаст", icon: "🎙", desc: "«За столом» — разговоры о еде" },
+        { title: "Рецепты", icon: "👩‍🍳", desc: "Простые рецепты от Василисы" },
+      ],
+    };
+  </script>
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES & DESIGN TOKENS
+    ============================================================ */
+    @property --gradient-angle {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: false;
+    }
+    @property --glow-opacity {
+      syntax: "<number>";
+      initial-value: 0;
+      inherits: false;
+    }
+    @property --card-lift {
+      syntax: "<length>";
+      initial-value: 0px;
+      inherits: false;
+    }
+
+    :root {
+      --cream: #FDF6EC;
+      --warm-white: #FFFAF3;
+      --peach: #F5C9A0;
+      --terracotta: #D4735E;
+      --blush: #F0A89A;
+      --caramel: #C27C40;
+      --gold: #E8B84B;
+      --dusty-rose: #E8B4A0;
+      --sage: #8FAF8A;
+      --charcoal: #2C2417;
+      --brown: #6B4226;
+      --light-brown: #A0714F;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-accent: 'Cormorant Garamond', Georgia, serif;
+
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ============================================================
+       BASE
+    ============================================================ */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--cream);
+      color: var(--charcoal);
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       SCROLL-DRIVEN ANIMATIONS
+    ============================================================ */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlideLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeSlideRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes revealText {
+      from { clip-path: inset(0 100% 0 0); }
+      to   { clip-path: inset(0 0% 0 0); }
+    }
+
+    .reveal {
+      animation: fadeSlideUp both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    .reveal-left {
+      animation: fadeSlideLeft both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    .reveal-right {
+      animation: fadeSlideRight both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    .reveal-scale {
+      animation: scaleIn both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%;
+    }
+
+    /* Stagger delays for groups */
+    .stagger > *:nth-child(1) { animation-delay: 0ms; }
+    .stagger > *:nth-child(2) { animation-delay: 80ms; }
+    .stagger > *:nth-child(3) { animation-delay: 160ms; }
+    .stagger > *:nth-child(4) { animation-delay: 240ms; }
+    .stagger > *:nth-child(5) { animation-delay: 320ms; }
+    .stagger > *:nth-child(6) { animation-delay: 400ms; }
+
+    /* ============================================================
+       HERO ANIMATIONS
+    ============================================================ */
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50%       { transform: translateY(-18px) rotate(1deg); }
+    }
+    @keyframes heroEntrance {
+      from { opacity: 0; transform: translateY(60px) scale(0.95); filter: blur(8px); }
+      to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+    @keyframes textReveal {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(30px, -20px) scale(1.1); }
+      66%  { transform: translate(-20px, 15px) scale(0.95); }
+    }
+    @keyframes rotateGrad {
+      to { --gradient-angle: 360deg; }
+    }
+    @keyframes shimmer {
+      from { background-position: -200% center; }
+      to   { background-position: 200% center; }
+    }
+    @keyframes badgePop {
+      0%   { transform: scale(0) rotate(-10deg); opacity: 0; }
+      70%  { transform: scale(1.1) rotate(3deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes starSpin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes waveIn {
+      0%   { transform: scaleX(0); transform-origin: left; }
+      100% { transform: scaleX(1); transform-origin: left; }
+    }
+
+    .hero-image {
+      animation: heroEntrance 1s var(--ease-out-expo) 0.3s both,
+                 heroFloat 6s ease-in-out 1.5s infinite;
+    }
+    .hero-title { animation: textReveal 0.9s var(--ease-out-expo) 0.1s both; }
+    .hero-sub   { animation: textReveal 0.9s var(--ease-out-expo) 0.3s both; }
+    .hero-desc  { animation: textReveal 0.9s var(--ease-out-expo) 0.5s both; }
+    .hero-cta   { animation: textReveal 0.9s var(--ease-spring) 0.7s both; }
+    .hero-badge { animation: badgePop 0.8s var(--ease-spring) 1.2s both; }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+    .orb-1 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(245,201,160,0.6), transparent 70%);
+      top: -100px; right: -80px;
+      animation: orbFloat 12s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(240,168,154,0.5), transparent 70%);
+      bottom: 0; left: -60px;
+      animation: orbFloat 10s ease-in-out 2s infinite reverse;
+    }
+    .orb-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(232,184,75,0.4), transparent 70%);
+      top: 50%; right: 30%;
+      animation: orbFloat 8s ease-in-out 1s infinite;
+    }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    .nav-blur {
+      backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(253, 246, 236, 0.85);
+      border-bottom: 1px solid rgba(212, 115, 94, 0.1);
+    }
+    .nav-link {
+      position: relative;
+      color: var(--light-brown);
+      transition: color 0.3s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: var(--terracotta);
+      transition: width 0.3s var(--ease-spring);
+      border-radius: 2px;
+    }
+    .nav-link:hover { color: var(--terracotta); }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ============================================================
+       SECTION TITLES
+    ============================================================ */
+    .section-label {
+      font-family: var(--font-accent);
+      font-style: italic;
+      color: var(--terracotta);
+      letter-spacing: 0.1em;
+      font-size: 0.95rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      color: var(--charcoal);
+      line-height: 1.1;
+    }
+    .underline-accent {
+      position: relative;
+      display: inline-block;
+    }
+    .underline-accent::after {
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 0;
+      width: 100%; height: 10px;
+      background: linear-gradient(90deg, var(--gold), var(--peach));
+      z-index: -1;
+      border-radius: 4px;
+      animation: waveIn 0.8s var(--ease-out-expo) 0.5s both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 25%;
+    }
+
+    /* ============================================================
+       STAT CARDS
+    ============================================================ */
+    .stat-card {
+      background: var(--warm-white);
+      border: 1px solid rgba(212, 115, 94, 0.12);
+      border-radius: 20px;
+      transition: transform 0.4s var(--ease-spring),
+                  box-shadow 0.4s var(--ease-smooth),
+                  border-color 0.3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(212, 115, 94, 0.15), 0 0 0 1px rgba(212,115,94,0.2);
+      border-color: rgba(212, 115, 94, 0.3);
+    }
+
+    /* ============================================================
+       PROGRESS BARS
+    ============================================================ */
+    .progress-bar {
+      height: 8px;
+      background: rgba(212,115,94,0.12);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--terracotta), var(--gold));
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 1.4s var(--ease-out-expo);
+    }
+    .progress-fill.animate { transform: scaleX(1); }
+
+    /* ============================================================
+       SOCIAL CARDS
+    ============================================================ */
+    .social-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: transform 0.5s var(--ease-spring),
+                  box-shadow 0.5s var(--ease-smooth);
+      transform-style: preserve-3d;
+    }
+    .social-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .social-card:hover::before { opacity: 1; }
+    .social-card:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.18), 0 0 40px rgba(255,255,255,0.1) inset;
+    }
+    .social-icon-wrap {
+      font-size: 3rem;
+      line-height: 1;
+      transition: transform 0.4s var(--ease-spring);
+    }
+    .social-card:hover .social-icon-wrap {
+      transform: scale(1.2) rotate(-5deg);
+    }
+    .social-glow {
+      position: absolute;
+      inset: -50%;
+      border-radius: 50%;
+      opacity: 0;
+      filter: blur(40px);
+      transition: opacity 0.5s, transform 0.5s;
+      pointer-events: none;
+    }
+    .social-card:hover .social-glow {
+      opacity: 0.25;
+      transform: scale(0.8);
+    }
+
+    /* ============================================================
+       PARALLAX TILT CARDS (Shop + Integration)
+    ============================================================ */
+    .tilt-card {
+      transition: transform 0.15s ease-out, box-shadow 0.3s;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .tilt-card-inner { transform: translateZ(20px); }
+
+    /* ============================================================
+       SHOP CARDS
+    ============================================================ */
+    .shop-card {
+      background: var(--warm-white);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(212,115,94,0.1);
+      transition: box-shadow 0.4s var(--ease-smooth);
+    }
+    .shop-card:hover {
+      box-shadow: 0 24px 48px rgba(212,115,94,0.18);
+    }
+    .shop-img {
+      overflow: hidden;
+      height: 220px;
+    }
+    .shop-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease-smooth);
+    }
+    .shop-card:hover .shop-img img {
+      transform: scale(1.08);
+    }
+    .shop-tag {
+      font-family: var(--font-accent);
+      font-style: italic;
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 99px;
+      background: linear-gradient(135deg, var(--gold), var(--peach));
+      color: var(--brown);
+      display: inline-block;
+    }
+    .add-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      transition: transform 0.3s var(--ease-spring), background 0.3s;
+      flex-shrink: 0;
+    }
+    .add-btn:hover {
+      transform: scale(1.2) rotate(90deg);
+      background: var(--caramel);
+    }
+
+    /* ============================================================
+       MEDIAKIT BLOCK
+    ============================================================ */
+    .mediakit-wrap {
+      background: linear-gradient(135deg, var(--charcoal) 0%, var(--brown) 100%);
+      border-radius: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .mediakit-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(from var(--gradient-angle), var(--gold), var(--terracotta), var(--blush), var(--gold));
+      border-radius: 34px;
+      z-index: -1;
+      animation: rotateGrad 5s linear infinite;
+    }
+    .mediakit-stat {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: background 0.3s, transform 0.3s var(--ease-spring);
+    }
+    .mediakit-stat:hover {
+      background: rgba(255,255,255,0.13);
+      transform: translateY(-4px);
+    }
+    .shimmer-text {
+      background: linear-gradient(90deg, var(--gold) 0%, #fff 40%, var(--gold) 60%, var(--peach) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+
+    /* ============================================================
+       DOWNLOAD BUTTON
+    ============================================================ */
+    .dl-btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--gold), var(--terracotta));
+      border-radius: 99px;
+      color: white;
+      font-weight: 600;
+      padding: 0.875rem 2.5rem;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s var(--ease-spring), box-shadow 0.3s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .dl-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: white;
+      border-radius: 99px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .dl-btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 16px 40px rgba(212,115,94,0.4);
+    }
+    .dl-btn:active { transform: scale(0.97); }
+
+    /* ============================================================
+       FORM
+    ============================================================ */
+    .form-group { position: relative; }
+    .form-input {
+      width: 100%;
+      background: var(--warm-white);
+      border: 1.5px solid rgba(212,115,94,0.2);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--terracotta);
+      box-shadow: 0 0 0 4px rgba(212,115,94,0.12), 0 4px 20px rgba(212,115,94,0.1);
+      transform: translateY(-2px);
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--light-brown);
+    }
+    .submit-btn {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--terracotta) 0%, var(--caramel) 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 1rem 2.5rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: transform 0.3s var(--ease-spring), box-shadow 0.3s;
+      width: 100%;
+    }
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(212,115,94,0.4);
+    }
+    .submit-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s, opacity 0.5s;
+    }
+    .submit-btn:active::after {
+      width: 300px; height: 300px;
+      opacity: 0;
+    }
+
+    /* ============================================================
+       COMING SOON CARDS
+    ============================================================ */
+    .coming-card {
+      background: var(--warm-white);
+      border-radius: 24px;
+      border: 1.5px dashed rgba(212,115,94,0.3);
+      transition: border-color 0.3s, transform 0.3s var(--ease-spring), box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .coming-card::before {
+      content: 'Скоро';
+      position: absolute;
+      top: 16px; right: -28px;
+      background: var(--gold);
+      color: var(--brown);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 36px;
+      transform: rotate(45deg);
+      letter-spacing: 0.05em;
+    }
+    .coming-card:hover {
+      border-color: var(--terracotta);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(212,115,94,0.12);
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer-bg {
+      background: var(--charcoal);
+      position: relative;
+      overflow: hidden;
+    }
+    .footer-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top, rgba(212,115,94,0.15) 0%, transparent 60%);
+    }
+
+    /* ============================================================
+       DECORATIVE ELEMENTS
+    ============================================================ */
+    @keyframes floatDot {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .deco-dot {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.18;
+      animation: floatDot ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       SMOOTH SCROLLBAR THUMB
+    ============================================================ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--terracotta), var(--gold));
+      border-radius: 3px;
+    }
+
+    /* ============================================================
+       SELECTION
+    ============================================================ */
+    ::selection {
+      background: rgba(212,115,94,0.25);
+      color: var(--brown);
+    }
+
+    /* ============================================================
+       MARQUEE / TICKER
+    ============================================================ */
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 18s linear infinite;
+    }
+    .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+
+    /* Mobile adjustments */
+    @media (max-width: 640px) {
+      .orb-1 { width: 250px; height: 250px; }
+      .orb-2 { width: 180px; height: 180px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+============================================================ -->
+<nav class="nav-blur fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+     x-data="{ scrolled: false }"
+     @scroll.window="scrolled = window.scrollY > 40"
+     :class="scrolled ? 'py-3 shadow-md' : 'py-4'">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <a href="#hero" class="flex items-center gap-2">
+      <span class="text-2xl">🍽</span>
+      <span class="font-bold text-xl" style="font-family: var(--font-display); color: var(--brown);">Василиса</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#about" class="nav-link text-sm font-medium">О себе</a>
+      <a href="#stats" class="nav-link text-sm font-medium">Достижения</a>
+      <a href="#socials" class="nav-link text-sm font-medium">Соцсети</a>
+      <a href="#mediakit" class="nav-link text-sm font-medium">Медиа-кит</a>
+      <a href="#shop" class="nav-link text-sm font-medium">Магазин</a>
+      <a href="#contact" class="dl-btn !py-2 !px-5 !text-sm">Сотрудничество</a>
+    </div>
+    <!-- Mobile burger -->
+    <button class="md:hidden p-2 rounded-lg" x-data="{ open: false }" @click="open = !open"
+            style="color: var(--brown);" aria-label="Меню">
+      ☰
+    </button>
+  </div>
+</nav>
+
+<!-- ============================================================
+     SECTION 1: HERO
+============================================================ -->
+<section id="hero" class="relative min-h-screen flex items-center overflow-hidden pt-20"
+         style="background: linear-gradient(160deg, var(--warm-white) 0%, var(--cream) 60%, rgba(240,168,154,0.15) 100%);">
+
+  <!-- Ambient orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Decorative dots -->
+  <div class="deco-dot" style="width:12px;height:12px;top:20%;left:8%;animation-duration:4s;"></div>
+  <div class="deco-dot" style="width:8px;height:8px;top:60%;left:12%;animation-duration:5s;animation-delay:1s;background:var(--terracotta);"></div>
+  <div class="deco-dot" style="width:16px;height:16px;top:30%;right:10%;animation-duration:6s;animation-delay:0.5s;"></div>
+
+  <div class="max-w-7xl mx-auto px-6 py-20 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+      <!-- Text content -->
+      <div class="order-2 lg:order-1">
+        <p class="section-label hero-sub mb-3">Знакомьтесь —</p>
+        <h1 class="section-title hero-title text-6xl sm:text-7xl lg:text-8xl mb-4"
+            style="color: var(--brown);">
+          Василиса<br>
+          <span style="color: var(--terracotta);">Громова</span>
+        </h1>
+        <p class="hero-desc text-xl sm:text-2xl mb-2" style="font-family: var(--font-accent); font-style: italic; color: var(--light-brown);">
+          Юный пищевой обозреватель
+        </p>
+        <p class="hero-desc text-base sm:text-lg mb-8 max-w-md leading-relaxed" style="color: var(--light-brown);">
+          8 лет. 200+ ресторанов. Честные отзывы с первой ложки — без дипломатии и скучных слов.
+        </p>
+
+        <div class="hero-cta flex flex-wrap gap-4">
+          <a href="#contact" class="dl-btn">
+            <span>Сотрудничество</span>
+            <span>→</span>
+          </a>
+          <a href="#mediakit"
+             class="flex items-center gap-2 px-6 py-3 rounded-full border-2 font-semibold transition-all duration-300 hover:scale-105"
+             style="border-color: var(--terracotta); color: var(--terracotta); hover:background: rgba(212,115,94,0.08);">
+            Медиа-кит
+          </a>
+        </div>
+
+        <!-- Quick stats row -->
+        <div class="hero-cta flex gap-6 mt-10 flex-wrap">
+          <div>
+            <div class="text-2xl font-bold" style="font-family: var(--font-display); color: var(--brown);">200+</div>
+            <div class="text-xs" style="color: var(--light-brown);">Ресторанов</div>
+          </div>
+          <div class="w-px" style="background: rgba(160,113,79,0.2);"></div>
+          <div>
+            <div class="text-2xl font-bold" style="font-family: var(--font-display); color: var(--brown);">47K</div>
+            <div class="text-xs" style="color: var(--light-brown);">Подписчиков</div>
+          </div>
+          <div class="w-px" style="background: rgba(160,113,79,0.2);"></div>
+          <div>
+            <div class="text-2xl font-bold" style="font-family: var(--font-display); color: var(--brown);">8.4%</div>
+            <div class="text-xs" style="color: var(--light-brown);">Engagement</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero image -->
+      <div class="order-1 lg:order-2 relative flex justify-center">
+        <div class="hero-badge absolute top-4 right-4 z-10"
+             style="background: var(--gold); color: var(--brown); border-radius: 50%; width: 90px; height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; line-height: 1.1; font-size: 0.75rem; text-align: center; box-shadow: 0 8px 24px rgba(232,184,75,0.4);">
+          <div style="font-size: 1.3rem;">⭐</div>
+          <div>Топ<br>критик</div>
+        </div>
+
+        <div class="relative">
+          <!-- Image frame glow -->
+          <div style="position:absolute; inset:-4px; border-radius:44% 56% 60% 40%/50% 40% 60% 50%; background: linear-gradient(135deg, var(--gold), var(--terracotta), var(--blush)); opacity:0.6; filter:blur(20px); animation: orbFloat 8s ease-in-out infinite;"></div>
+
+          <img
+            src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=520&q=80"
+            alt="Василиса — юный ресторанный критик"
+            class="hero-image relative z-10"
+            style="width: 420px; max-width: 100%; height: 520px; object-fit: cover; object-position: top; border-radius: 44% 56% 60% 40%/50% 40% 60% 50%; border: 4px solid rgba(255,255,255,0.8); box-shadow: 0 40px 80px rgba(107,66,38,0.2);"
+          />
+
+          <!-- Floating food emoji badges -->
+          <div style="position:absolute; bottom: 30px; left: -20px; background: white; border-radius: 16px; padding: 10px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); font-size: 1.5rem; animation: heroFloat 5s ease-in-out 1s infinite; z-index: 20;">
+            🍜
+          </div>
+          <div style="position:absolute; top: 80px; left: -30px; background: white; border-radius: 16px; padding: 10px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); font-size: 1.5rem; animation: heroFloat 7s ease-in-out 2s infinite; z-index: 20;">
+            ⭐️ 4.9
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom marquee -->
+  <div class="marquee-wrap absolute bottom-0 left-0 right-0 py-3 overflow-hidden"
+       style="background: var(--terracotta);">
+    <div class="marquee-track" style="gap: 0;">
+      <span class="text-white text-sm font-medium opacity-90 whitespace-nowrap" style="padding: 0 2rem;">
+        🍕 Пицца · 🍣 Суши · 🥩 Стейк · 🍰 Десерт · 🥗 Салат · 🍝 Паста · 🥐 Круассан · 🍱 Бенто ·
+        🥘 Рагу · 🍛 Карри · 🫕 Тажин · 🧆 Фалафель · 🍔 Бургер · 🦞 Омар · 🧁 Маффин ·&nbsp;
+      </span>
+      <span class="text-white text-sm font-medium opacity-90 whitespace-nowrap" style="padding: 0 2rem;">
+        🍕 Пицца · 🍣 Суши · 🥩 Стейк · 🍰 Десерт · 🥗 Салат · 🍝 Паста · 🥐 Круассан · 🍱 Бенто ·
+        🥘 Рагу · 🍛 Карри · 🫕 Тажин · 🧆 Фалафель · 🍔 Бургер · 🦞 Омар · 🧁 Маффин ·&nbsp;
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 2: КТО ТАКАЯ ВАСИЛИСА
+============================================================ -->
+<section id="about" class="py-28 relative overflow-hidden"
+         style="background: var(--warm-white);">
+
+  <div class="deco-dot" style="width:200px;height:200px;bottom:-60px;right:-60px;opacity:0.06;"></div>
+
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Image collage -->
+      <div class="reveal-left relative h-[520px]">
+        <img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=380&q=80"
+             alt="Дегустация"
+             style="position:absolute; top:0; left:0; width:260px; height:340px; object-fit:cover; border-radius:24px; box-shadow: 0 24px 48px rgba(107,66,38,0.18); border: 3px solid white;" />
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=300&q=80"
+             alt="Ресторан"
+             style="position:absolute; bottom:0; right:0; width:240px; height:300px; object-fit:cover; border-radius:24px; box-shadow: 0 24px 48px rgba(107,66,38,0.18); border: 3px solid white;" />
+        <!-- Quote card -->
+        <div style="position:absolute; bottom:40px; left:200px; width:200px; background: var(--terracotta); color: white; padding: 20px; border-radius: 20px; box-shadow: 0 12px 32px rgba(212,115,94,0.4); font-family: var(--font-accent); font-style: italic; font-size: 0.9rem; line-height: 1.5; z-index: 10;">
+          «Я пробую — вы решаете» 🍽️
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="reveal-right">
+        <p class="section-label mb-3">Знакомьтесь</p>
+        <h2 class="section-title text-5xl mb-6">
+          Кто такая<br>
+          <span class="underline-accent">Василиса?</span>
+        </h2>
+        <p class="text-lg leading-relaxed mb-6" style="color: var(--light-brown);">
+          Я — Василиса, мне 8 лет, и я уже знаю разницу между настоящим трюфелем и трюфельным маслом. Пробую блюда в ресторанах Москвы и по всему миру, честно рассказываю о вкусе, подаче и атмосфере.
+        </p>
+        <p class="text-lg leading-relaxed mb-8" style="color: var(--light-brown);">
+          Мои обзоры читают родители, которые хотят прийти в ресторан со своими детьми — и не разочароваться. Никакой дипломатии: если невкусно — скажу.
+        </p>
+
+        <!-- Feature pills -->
+        <div class="flex flex-wrap gap-3 mb-8">
+          <span class="px-4 py-2 rounded-full text-sm font-medium" style="background: rgba(232,184,75,0.15); color: var(--caramel); border: 1px solid rgba(232,184,75,0.3);">🍽 Честные обзоры</span>
+          <span class="px-4 py-2 rounded-full text-sm font-medium" style="background: rgba(212,115,94,0.12); color: var(--terracotta); border: 1px solid rgba(212,115,94,0.2);">👩‍🍳 Детский взгляд</span>
+          <span class="px-4 py-2 rounded-full text-sm font-medium" style="background: rgba(143,175,138,0.15); color: var(--sage); border: 1px solid rgba(143,175,138,0.3);">🌍 28 городов</span>
+        </div>
+
+        <!-- Skills/knowledge progress bars -->
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium" style="color: var(--brown);">Вкус и текстуры</span>
+              <span class="text-sm" style="color: var(--light-brown);">98%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" data-width="0.98" x-data x-intersect="$el.classList.add('animate'); $el.style.transform = 'scaleX(0.98)'"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium" style="color: var(--brown);">Презентация блюда</span>
+              <span class="text-sm" style="color: var(--light-brown);">91%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" data-width="0.91" x-data x-intersect="$el.classList.add('animate'); $el.style.transform = 'scaleX(0.91)'"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium" style="color: var(--brown);">Атмосфера и сервис</span>
+              <span class="text-sm" style="color: var(--light-brown);">87%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" data-width="0.87" x-data x-intersect="$el.classList.add('animate'); $el.style.transform = 'scaleX(0.87)'"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3: ДОСТИЖЕНИЯ
+============================================================ -->
+<section id="stats" class="py-28 relative overflow-hidden"
+         style="background: linear-gradient(135deg, var(--cream), rgba(245,201,160,0.25));">
+
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16 reveal">
+      <p class="section-label mb-3">Цифры говорят сами</p>
+      <h2 class="section-title text-5xl">Достижения</h2>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 stagger mb-16">
+      <div class="stat-card reveal p-8 text-center">
+        <div class="text-5xl font-black mb-2" style="font-family: var(--font-display); color: var(--terracotta);"
+             x-data="counter(200)"
+             x-intersect.once="start()"
+             x-text="display + '+'">200+</div>
+        <div class="text-sm font-medium" style="color: var(--light-brown);">Ресторанов посещено</div>
+      </div>
+      <div class="stat-card reveal p-8 text-center">
+        <div class="text-5xl font-black mb-2" style="font-family: var(--font-display); color: var(--caramel);"
+             x-data="counter(47)"
+             x-intersect.once="start()"
+             x-text="display + 'K'">47K</div>
+        <div class="text-sm font-medium" style="color: var(--light-brown);">Подписчиков</div>
+      </div>
+      <div class="stat-card reveal p-8 text-center">
+        <div class="text-5xl font-black mb-2" style="font-family: var(--font-display); color: var(--terracotta);"
+             x-data="counter(312)"
+             x-intersect.once="start()"
+             x-text="display">312</div>
+        <div class="text-sm font-medium" style="color: var(--light-brown);">Видео-обзоров</div>
+      </div>
+      <div class="stat-card reveal p-8 text-center">
+        <div class="text-5xl font-black mb-2" style="font-family: var(--font-display); color: var(--caramel);"
+             x-data="counter(28)"
+             x-intersect.once="start()"
+             x-text="display">28</div>
+        <div class="text-sm font-medium" style="color: var(--light-brown);">Городов</div>
+      </div>
+    </div>
+
+    <!-- Achievements list -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="reveal p-6 rounded-2xl" style="background: var(--warm-white); border: 1px solid rgba(232,184,75,0.25);">
+        <div class="text-3xl mb-3">🏆</div>
+        <h3 class="font-bold text-lg mb-1" style="font-family: var(--font-display); color: var(--brown);">Лучший детский блог</h3>
+        <p class="text-sm" style="color: var(--light-brown);">Премия «Вкус года» 2024 в категории детских food-блогеров</p>
+      </div>
+      <div class="reveal p-6 rounded-2xl" style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.2);">
+        <div class="text-3xl mb-3">📺</div>
+        <h3 class="font-bold text-lg mb-1" style="font-family: var(--font-display); color: var(--brown);">Телевизионное участие</h3>
+        <p class="text-sm" style="color: var(--light-brown);">Гость программы «Едим дома» на НТВ, 2024</p>
+      </div>
+      <div class="reveal p-6 rounded-2xl" style="background: var(--warm-white); border: 1px solid rgba(143,175,138,0.25);">
+        <div class="text-3xl mb-3">📖</div>
+        <h3 class="font-bold text-lg mb-1" style="font-family: var(--font-display); color: var(--brown);">Публикации в СМИ</h3>
+        <p class="text-sm" style="color: var(--light-brown);">RBK, The Village, Афиша Еда, Esquire Kids</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4: СОЦСЕТИ
+============================================================ -->
+<section id="socials" class="py-28 overflow-hidden"
+         style="background: var(--warm-white);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16 reveal">
+      <p class="section-label mb-3">Присоединяйтесь</p>
+      <h2 class="section-title text-5xl">Мы в <span class="underline-accent">соцсетях</span></h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger">
+
+      <!-- YouTube -->
+      <a href="https://youtube.com" target="_blank"
+         class="social-card reveal block"
+         style="background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%); padding: 2rem; color: white; text-decoration: none; min-height: 280px;">
+        <div class="social-glow" style="background: #ff4444;"></div>
+        <div class="social-icon-wrap mb-4">▶</div>
+        <div class="text-3xl font-black mb-1" style="font-family: var(--font-display);">31K</div>
+        <div class="font-bold mb-1">YouTube</div>
+        <div class="text-sm opacity-75 mb-4">@vasilisa_eats</div>
+        <div class="text-sm opacity-85 leading-relaxed">Видео-обзоры ресторанов, мастер-классы с шефами</div>
+        <div class="mt-6 text-xs opacity-60 flex items-center gap-1">Подписаться →</div>
+      </a>
+
+      <!-- Instagram -->
+      <a href="https://instagram.com" target="_blank"
+         class="social-card reveal block"
+         style="background: linear-gradient(135deg, #f093fb 0%, #e1306c 50%, #fd5949 100%); padding: 2rem; color: white; text-decoration: none; min-height: 280px;">
+        <div class="social-glow" style="background: #e1306c;"></div>
+        <div class="social-icon-wrap mb-4">◈</div>
+        <div class="text-3xl font-black mb-1" style="font-family: var(--font-display);">12K</div>
+        <div class="font-bold mb-1">Instagram</div>
+        <div class="text-sm opacity-75 mb-4">@vasilisa.food</div>
+        <div class="text-sm opacity-85 leading-relaxed">Фото блюд, сторисы из ресторанов</div>
+        <div class="mt-6 text-xs opacity-60 flex items-center gap-1">Подписаться →</div>
+      </a>
+
+      <!-- TikTok -->
+      <a href="https://tiktok.com" target="_blank"
+         class="social-card reveal block"
+         style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%); padding: 2rem; color: white; text-decoration: none; min-height: 280px;">
+        <div class="social-glow" style="background: #69c9d0;"></div>
+        <div class="social-icon-wrap mb-4" style="color: #69C9D0;">♪</div>
+        <div class="text-3xl font-black mb-1" style="font-family: var(--font-display);">4K</div>
+        <div class="font-bold mb-1">TikTok</div>
+        <div class="text-sm opacity-75 mb-4">@vasilisaeats</div>
+        <div class="text-sm opacity-85 leading-relaxed">Короткие ролики и реакции на блюда</div>
+        <div class="mt-6 text-xs opacity-60 flex items-center gap-1">Подписаться →</div>
+      </a>
+
+      <!-- Telegram -->
+      <a href="https://t.me" target="_blank"
+         class="social-card reveal block"
+         style="background: linear-gradient(135deg, #4facfe 0%, #2AABEE 100%); padding: 2rem; color: white; text-decoration: none; min-height: 280px;">
+        <div class="social-glow" style="background: #2AABEE;"></div>
+        <div class="social-icon-wrap mb-4">✈</div>
+        <div class="text-3xl font-black mb-1" style="font-family: var(--font-display);">5K+</div>
+        <div class="font-bold mb-1">Telegram</div>
+        <div class="text-sm opacity-75 mb-4">@vasilisa_review</div>
+        <div class="text-sm opacity-85 leading-relaxed">Эксклюзивные обзоры и рекомендации</div>
+        <div class="mt-6 text-xs opacity-60 flex items-center gap-1">Вступить →</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5: УСПЕШНЫЕ ИНТЕГРАЦИИ
+============================================================ -->
+<section id="integrations" class="py-24 overflow-hidden"
+         style="background: linear-gradient(180deg, var(--cream) 0%, var(--warm-white) 100%);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="section-label mb-3">Уже работали вместе</p>
+      <h2 class="section-title text-4xl">Успешные<br><span class="underline-accent">интеграции</span></h2>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 stagger">
+      <div class="reveal tilt-card p-6 rounded-2xl text-center cursor-default"
+           style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.12);">
+        <div class="text-2xl mb-2">🍽</div>
+        <div class="font-bold text-sm" style="color: var(--brown);">Novikov Group</div>
+        <div class="text-xs mt-1" style="color: var(--light-brown);">Ресторанная группа</div>
+      </div>
+      <div class="reveal tilt-card p-6 rounded-2xl text-center cursor-default"
+           style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.12);">
+        <div class="text-2xl mb-2">🌿</div>
+        <div class="font-bold text-sm" style="color: var(--brown);">White Rabbit</div>
+        <div class="text-xs mt-1" style="color: var(--light-brown);">Fine Dining</div>
+      </div>
+      <div class="reveal tilt-card p-6 rounded-2xl text-center cursor-default"
+           style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.12);">
+        <div class="text-2xl mb-2">🏪</div>
+        <div class="font-bold text-sm" style="color: var(--brown);">Детский мир</div>
+        <div class="text-xs mt-1" style="color: var(--light-brown);">Ритейл партнёр</div>
+      </div>
+      <div class="reveal tilt-card p-6 rounded-2xl text-center cursor-default"
+           style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.12);">
+        <div class="text-2xl mb-2">⚡</div>
+        <div class="font-bold text-sm" style="color: var(--brown);">Electrolux</div>
+        <div class="text-xs mt-1" style="color: var(--light-brown);">Бытовая техника</div>
+      </div>
+      <div class="reveal tilt-card p-6 rounded-2xl text-center cursor-default"
+           style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.12);">
+        <div class="text-2xl mb-2">🥛</div>
+        <div class="font-bold text-sm" style="color: var(--brown);">Danone</div>
+        <div class="text-xs mt-1" style="color: var(--light-brown);">FMCG бренд</div>
+      </div>
+      <div class="reveal tilt-card p-6 rounded-2xl text-center cursor-default"
+           style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.12);">
+        <div class="text-2xl mb-2">📱</div>
+        <div class="font-bold text-sm" style="color: var(--brown);">Food.ru</div>
+        <div class="text-xs mt-1" style="color: var(--light-brown);">Медиа-партнёр</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5b: МЕДИА-КИТ (ключевой блок)
+============================================================ -->
+<section id="mediakit" class="py-28 overflow-hidden"
+         style="background: var(--warm-white);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-12 reveal">
+      <p class="section-label mb-3">Всё в одном месте</p>
+      <h2 class="section-title text-5xl">Медиа-кит<br><span class="underline-accent">2025</span></h2>
+    </div>
+
+    <div class="mediakit-wrap p-10 md:p-14 reveal">
+      <!-- Decorative food pattern -->
+      <div style="position:absolute; top:20px; right:30px; font-size: 6rem; opacity:0.06; pointer-events:none; line-height:1;">🍽</div>
+      <div style="position:absolute; bottom:20px; left:30px; font-size: 4rem; opacity:0.08; pointer-events:none; line-height:1;">⭐</div>
+
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+        <div>
+          <p class="text-sm font-medium mb-2" style="color: rgba(255,255,255,0.5); letter-spacing:0.1em; text-transform:uppercase;">Официальный документ</p>
+          <h3 class="shimmer-text text-4xl font-black mb-4" style="font-family: var(--font-display);">
+            Медиа-кит Василисы
+          </h3>
+          <p class="mb-6 leading-relaxed" style="color: rgba(255,255,255,0.75);">
+            Полный пакет для рекламодателей и партнёров: аудитория, форматы интеграций, кейсы, тарифы и условия сотрудничества.
+          </p>
+
+          <!-- Format tags -->
+          <div class="flex flex-wrap gap-2 mb-8">
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold" style="background: rgba(232,184,75,0.2); color: var(--gold); border: 1px solid rgba(232,184,75,0.3);">Видео-интеграция</span>
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.15);">Нативный обзор</span>
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.15);">Сторис-пакет</span>
+            <span class="px-3 py-1.5 rounded-full text-xs font-semibold" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.15);">Совместный ивент</span>
+          </div>
+
+          <button class="dl-btn">
+            <span>⬇</span>
+            <span>Скачать медиа-кит PDF</span>
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="mediakit-stat">
+            <div class="shimmer-text text-3xl font-black mb-1" style="font-family: var(--font-display);">47K+</div>
+            <div class="text-sm" style="color: rgba(255,255,255,0.65);">Общий охват</div>
+          </div>
+          <div class="mediakit-stat">
+            <div class="shimmer-text text-3xl font-black mb-1" style="font-family: var(--font-display);">8.4%</div>
+            <div class="text-sm" style="color: rgba(255,255,255,0.65);">Engagement Rate</div>
+          </div>
+          <div class="mediakit-stat">
+            <div class="shimmer-text text-3xl font-black mb-1" style="font-family: var(--font-display);">от 800₽</div>
+            <div class="text-sm" style="color: rgba(255,255,255,0.65);">CPM</div>
+          </div>
+          <div class="mediakit-stat">
+            <div class="shimmer-text text-3xl font-black mb-1" style="font-family: var(--font-display);">4</div>
+            <div class="text-sm" style="color: rgba(255,255,255,0.65);">Формата интеграций</div>
+          </div>
+          <div class="mediakit-stat col-span-2">
+            <div class="shimmer-text text-2xl font-black mb-1" style="font-family: var(--font-display);">25–45 лет, мамы</div>
+            <div class="text-sm" style="color: rgba(255,255,255,0.65);">Основная аудитория</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 6: СОТРУДНИЧЕСТВО + ФОРМА
+============================================================ -->
+<section id="contact" class="py-28 overflow-hidden"
+         style="background: linear-gradient(135deg, var(--cream) 0%, rgba(245,201,160,0.2) 100%);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+      <!-- Left info -->
+      <div class="reveal-left">
+        <p class="section-label mb-3">Напишите нам</p>
+        <h2 class="section-title text-5xl mb-6">
+          Начнём<br>
+          <span class="underline-accent">сотрудничество?</span>
+        </h2>
+        <p class="text-lg leading-relaxed mb-8" style="color: var(--light-brown);">
+          Мы открыты для брендовых интеграций, партнёрских проектов, появления на мероприятиях и совместного контента. Все вопросы — маме Кате.
+        </p>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 p-4 rounded-2xl" style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.1);">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background: rgba(232,184,75,0.15);">📧</div>
+            <div>
+              <div class="font-semibold text-sm" style="color: var(--brown);">Email для брендов</div>
+              <div style="color: var(--terracotta);">hello@vasilisa-eats.ru</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 p-4 rounded-2xl" style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.1);">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background: rgba(212,115,94,0.1);">👩</div>
+            <div>
+              <div class="font-semibold text-sm" style="color: var(--brown);">Менеджер — Мама Катя</div>
+              <div style="color: var(--terracotta);">mama@vasilisa-eats.ru</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 p-4 rounded-2xl" style="background: var(--warm-white); border: 1px solid rgba(212,115,94,0.1);">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background: rgba(42,171,238,0.1);">✈</div>
+            <div>
+              <div class="font-semibold text-sm" style="color: var(--brown);">Telegram</div>
+              <div style="color: var(--terracotta);">@vasilisa_manager</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="reveal-right"
+           x-data="{
+             form: { name: '', brand: '', email: '', format: '', message: '' },
+             submitted: false,
+             async submit() {
+               await new Promise(r => setTimeout(r, 600));
+               this.submitted = true;
+             }
+           }">
+
+        <div x-show="!submitted" x-transition:leave="opacity-0 scale-95 transition duration-300">
+          <div class="p-8 rounded-3xl" style="background: var(--warm-white); box-shadow: 0 24px 60px rgba(107,66,38,0.08); border: 1px solid rgba(212,115,94,0.1);">
+            <h3 class="text-2xl font-bold mb-6" style="font-family: var(--font-display); color: var(--brown);">Заявка на сотрудничество</h3>
+
+            <div class="space-y-5">
+              <div class="form-group">
+                <label class="form-label">Ваше имя *</label>
+                <input type="text" x-model="form.name" class="form-input" placeholder="Иван Петров" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Бренд / компания *</label>
+                <input type="text" x-model="form.brand" class="form-input" placeholder="Название компании" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" x-model="form.email" class="form-input" placeholder="you@company.ru" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Формат интеграции</label>
+                <select x-model="form.format" class="form-input" style="appearance: none;">
+                  <option value="">Выберите формат</option>
+                  <option>Видео-интеграция</option>
+                  <option>Нативный обзор</option>
+                  <option>Сторис-пакет</option>
+                  <option>Совместный ивент</option>
+                  <option>Другое</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Расскажите о проекте</label>
+                <textarea x-model="form.message" class="form-input" rows="4" placeholder="Кратко опишите задачу, сроки и бюджет..."></textarea>
+              </div>
+
+              <button @click="submit()" class="submit-btn mt-2">
+                Отправить заявку ✨
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Success state -->
+        <div x-show="submitted"
+             x-transition:enter="opacity-0 scale-90 transition duration-500"
+             x-transition:enter-end="opacity-100 scale-100"
+             class="p-12 rounded-3xl text-center"
+             style="background: var(--warm-white); border: 1px solid rgba(143,175,138,0.3); box-shadow: 0 24px 60px rgba(143,175,138,0.12);">
+          <div class="text-6xl mb-4" style="animation: badgePop 0.6s var(--ease-spring) both;">🎉</div>
+          <h3 class="text-2xl font-bold mb-3" style="font-family: var(--font-display); color: var(--brown);">Заявка отправлена!</h3>
+          <p style="color: var(--light-brown);">Мама Катя свяжется с вами в течение 24 часов. Спасибо за интерес к сотрудничеству с Василисой!</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7: МАГАЗИН
+============================================================ -->
+<section id="shop" class="py-28 overflow-hidden"
+         style="background: var(--warm-white);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16 reveal">
+      <p class="section-label mb-3">Фирменный</p>
+      <h2 class="section-title text-5xl">Магазин<br><span class="underline-accent">Василисы</span></h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger">
+
+      <div class="shop-card reveal tilt-card">
+        <div class="shop-img">
+          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80" alt="Дневник" />
+        </div>
+        <div class="p-5">
+          <span class="shop-tag mb-2">Хит</span>
+          <h3 class="font-bold text-base mt-2 mb-1" style="font-family: var(--font-display); color: var(--brown);">Дневник ресторанного критика</h3>
+          <p class="text-xs mb-4 leading-relaxed" style="color: var(--light-brown);">Красивый блокнот для записей о вкусах и впечатлениях</p>
+          <div class="flex items-center justify-between">
+            <span class="font-black text-lg" style="color: var(--terracotta);">890 ₽</span>
+            <button class="add-btn" aria-label="Добавить">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="shop-card reveal tilt-card">
+        <div class="shop-img">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Стикеры" />
+        </div>
+        <div class="p-5">
+          <span class="shop-tag mb-2">Новинка</span>
+          <h3 class="font-bold text-base mt-2 mb-1" style="font-family: var(--font-display); color: var(--brown);">Стикеры «Оценки Василисы»</h3>
+          <p class="text-xs mb-4 leading-relaxed" style="color: var(--light-brown);">Набор наклеек с рейтингами и фирменными фразами</p>
+          <div class="flex items-center justify-between">
+            <span class="font-black text-lg" style="color: var(--terracotta);">390 ₽</span>
+            <button class="add-btn" aria-label="Добавить">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="shop-card reveal tilt-card">
+        <div class="shop-img">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80" alt="Фартук" />
+        </div>
+        <div class="p-5">
+          <span class="shop-tag mb-2">Мерч</span>
+          <h3 class="font-bold text-base mt-2 mb-1" style="font-family: var(--font-display); color: var(--brown);">Поварской фартук мини</h3>
+          <p class="text-xs mb-4 leading-relaxed" style="color: var(--light-brown);">Фирменный фартук юного критика с вышивкой</p>
+          <div class="flex items-center justify-between">
+            <span class="font-black text-lg" style="color: var(--terracotta);">1 490 ₽</span>
+            <button class="add-btn" aria-label="Добавить">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="shop-card reveal tilt-card">
+        <div class="shop-img">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="PDF гид" />
+        </div>
+        <div class="p-5">
+          <span class="shop-tag mb-2">Цифровой</span>
+          <h3 class="font-bold text-base mt-2 mb-1" style="font-family: var(--font-display); color: var(--brown);">PDF: 50 лучших ресторанов</h3>
+          <p class="text-xs mb-4 leading-relaxed" style="color: var(--light-brown);">Гид по детским ресторанам Москвы от Василисы</p>
+          <div class="flex items-center justify-between">
+            <span class="font-black text-lg" style="color: var(--terracotta);">490 ₽</span>
+            <button class="add-btn" aria-label="Добавить">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 8: В РАЗРАБОТКЕ
+============================================================ -->
+<section id="coming" class="py-24 overflow-hidden"
+         style="background: var(--cream);">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-14 reveal">
+      <p class="section-label mb-3">В разработке</p>
+      <h2 class="section-title text-4xl">Скоро<br><span class="underline-accent">появится</span></h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 stagger">
+      <div class="coming-card reveal p-8">
+        <div class="text-4xl mb-4">✍</div>
+        <h3 class="font-bold text-xl mb-2" style="font-family: var(--font-display); color: var(--brown);">Блог</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--light-brown);">Авторские статьи и колонки о ресторанном мире глазами ребёнка</p>
+      </div>
+      <div class="coming-card reveal p-8">
+        <div class="text-4xl mb-4">🎙</div>
+        <h3 class="font-bold text-xl mb-2" style="font-family: var(--font-display); color: var(--brown);">Подкаст</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--light-brown);">«За столом» — разговоры о еде с шефами, родителями и детьми</p>
+      </div>
+      <div class="coming-card reveal p-8">
+        <div class="text-4xl mb-4">👩‍🍳</div>
+        <h3 class="font-bold text-xl mb-2" style="font-family: var(--font-display); color: var(--brown);">Рецепты</h3>
+        <p class="text-sm leading-relaxed" style="color: var(--light-brown);">Простые и вкусные рецепты от Василисы — для детей и с детьми</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer-bg py-16 text-white">
+  <div class="relative z-10 max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-2xl">🍽</span>
+          <span class="font-bold text-xl" style="font-family: var(--font-display);">Василиса</span>
+        </div>
+        <p class="text-sm leading-relaxed" style="color: rgba(255,255,255,0.55);">
+          Юный пищевой обозреватель из Москвы. Честные отзывы с первой ложки — с 2021 года.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-semibold mb-4" style="color: var(--gold);">Разделы</h4>
+        <div class="space-y-2">
+          <a href="#about" class="block text-sm hover:text-white transition-colors" style="color: rgba(255,255,255,0.55);">О Василисе</a>
+          <a href="#stats" class="block text-sm hover:text-white transition-colors" style="color: rgba(255,255,255,0.55);">Достижения</a>
+          <a href="#mediakit" class="block text-sm hover:text-white transition-colors" style="color: rgba(255,255,255,0.55);">Медиа-кит</a>
+          <a href="#shop" class="block text-sm hover:text-white transition-colors" style="color: rgba(255,255,255,0.55);">Магазин</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-semibold mb-4" style="color: var(--gold);">Контакты</h4>
+        <div class="space-y-2 text-sm" style="color: rgba(255,255,255,0.55);">
+          <p>📧 hello@vasilisa-eats.ru</p>
+          <p>✈ @vasilisa_manager</p>
+          <p>📍 Москва, Россия</p>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <a href="https://youtube.com" target="_blank" class="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-transform hover:scale-110" style="background: rgba(255,255,255,0.1);">▶</a>
+          <a href="https://instagram.com" target="_blank" class="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-transform hover:scale-110" style="background: rgba(255,255,255,0.1);">◈</a>
+          <a href="https://t.me" target="_blank" class="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-transform hover:scale-110" style="background: rgba(255,255,255,0.1);">✈</a>
+          <a href="https://tiktok.com" target="_blank" class="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-transform hover:scale-110" style="background: rgba(255,255,255,0.1);">♪</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="border-t pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
+         style="border-color: rgba(255,255,255,0.08);">
+      <p class="text-xs" style="color: rgba(255,255,255,0.35);">© 2025 Василиса Громова. Все права защищены.</p>
+      <p class="text-xs" style="color: rgba(255,255,255,0.35);">Сделано с ❤️ и едой</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     ALPINE.JS APP + COUNTER COMPONENT
+============================================================ -->
+<script>
+  // ===== Alpine App =====
+  function app() {
+    return {
+      init() {
+        // Tilt effect on .tilt-card elements
+        this.$nextTick(() => {
+          document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              const cx = rect.width / 2;
+              const cy = rect.height / 2;
+              const rx = ((y - cy) / cy) * 7;
+              const ry = ((x - cx) / cx) * -7;
+              card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+              card.style.transform = '';
+            });
+          });
+        });
+      }
+    };
+  }
+
+  // ===== Counter Component =====
+  // Used by x-data="counter(200)" to animate numbers on scroll
+  function counter(target) {
+    return {
+      display: 0,
+      started: false,
+      start() {
+        if (this.started) return;
+        this.started = true;
+        const duration = 1800;
+        const startTime = performance.now();
+        const update = (now) => {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease out expo
+          const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+          this.display = Math.round(eased * target);
+          if (progress < 1) requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+      }
+    };
+  }
+</script>
+
+</body>
+</html>
+
+<!--
+==========================================================
+  📖 ИНСТРУКЦИЯ ПО РАБОТЕ С ФАЙЛОМ
+==========================================================
+
+1. КОНФИГУРАЦИЯ (CONFIG)
+   Найдите объект window.CONFIG в начале <script>-блока.
+   Там хранятся все тексты, ссылки, статистика, данные
+   о соцсетях и товарах. Меняйте только значения —
+   структура останется рабочей.
+
+2. ФОТО
+   Все изображения подключены через Unsplash CDN.
+   Для замены на реальные фото:
+   - Загрузите фото на любой хостинг (Cloudinary, Imgur, S3)
+   - Замените URL в тегах <img src="..."> или в CONFIG.shop[x].img
+
+3. ФОРМА
+   Текущая форма работает в режиме "fake submit"
+   (показывает success-state без реальной отправки).
+   Для боевой интеграции подключите:
+   - Formspree: поменяйте метод submit() на fetch('https://formspree.io/f/YOURKEY', ...)
+   - EmailJS, Telegram Bot API и т.д.
+
+4. МЕДИА-КИТ
+   Кнопка "Скачать медиа-кит PDF" — замените атрибут href
+   на реальную ссылку на PDF-файл. Пример:
+   <a href="https://storage.example.com/mediakit-2025.pdf" class="dl-btn" download>
+
+5. ССЫЛКИ НА СОЦСЕТИ
+   Замените href="https://youtube.com" на реальные ссылки
+   на каналы Василисы в каждом <a>-теге соцсетей.
+
+6. АНИМАЦИИ
+   - Scroll-driven: reveal, reveal-left, reveal-right, reveal-scale
+     автоматически срабатывают при скролле (CSS animation-timeline)
+   - Счётчики: x-intersect.once="start()" — срабатывают 1 раз
+   - Tilt: инициализируется в Alpine app() init()
+   - Все timing'и меняются в CSS (animation-duration, delays)
+
+7. ЦВЕТА
+   Вся палитра — CSS Custom Properties в :root {}.
+   Меняйте значения --terracotta, --gold, --blush и т.д.
+   для изменения цветовой схемы сайта.
+
+8. ШРИФТЫ
+   Подключены через Google Fonts: Playfair Display, DM Sans,
+   Cormorant Garamond. Для замены — поменяйте ссылку в <head>
+   и обновите var(--font-display), var(--font-body) в :root.
+
+==========================================================
+-->

@@ -1,740 +1,961 @@
 <!DOCTYPE html>
-<html lang="en" x-data="VasilisaApp()" :class="{ dark: theme === 'dark' }" class="scroll-smooth">
+<!--
+╔═══════════════════════════════════════════════════════════════════╗
+║  VASILISA YUMMY — Phuket's Youngest Food Critic  v4.0            ║
+║  Single-file landing page                                         ║
+║                                                                   ║
+║  Quick edit guide:                                                ║
+║  • All content/colors → SITE_CONFIG (first <script> tag)         ║
+║  • Form endpoint → SITE_CONFIG.settings.formspreeEndpoint         ║
+║  • Language switch → EN/RU buttons; all text in SITE_CONFIG.i18n ║
+║  • PDF content → SITE_CONFIG.mediakit                             ║
+╚═══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en" x-data="App()" :lang="lang" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title x-text="C.meta.title">Vasilisa Chugunova — Phuket's Youngest Food Critic</title>
-  <meta name="description" :content="C.meta.description" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="index,follow"/>
+<link rel="canonical" href="https://vasilisayummy.com/"/>
 
-  <!-- ─── CDN: Tailwind ─── -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- ─── CDN: Alpine.js ─── -->
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <!-- ─── Fonts ─── -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,700&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+<!-- ── Dynamic title & description (Alpine updates these on lang change) ── -->
+<title id="pg-title">Vasilisa Yummy — Phuket's Youngest Food Critic</title>
+<meta id="pg-desc" name="description"
+      content="Vasilisa Chugunova, 8 years old — mukbang creator, kids food reviewer & honest restaurant critic based in Phuket, Thailand. Media Kit, brand collaborations & more."/>
+<meta name="keywords"
+      content="Vasilisa Yummy, Vasilisa Chugunova, kids food reviewer Phuket, young food critic Thailand, mukbang Thailand, children food blogger SEA, restaurant review Phuket, food influencer Thailand"/>
+<meta name="author" content="Vasilisa Chugunova"/>
 
-  <!-- ╔══════════════════════════════════════════════════════════════╗
-       ║                  SITE CONFIGURATION                         ║
-       ║  Edit ALL content, colors, links and data here.             ║
-       ╚══════════════════════════════════════════════════════════════╝ -->
-  <script>
-    window.SITE_CONFIG = {
+<!-- Open Graph -->
+<meta property="og:type"        content="website"/>
+<meta property="og:url"         content="https://vasilisayummy.com/"/>
+<meta property="og:site_name"   content="Vasilisa Yummy"/>
+<meta property="og:image"       content="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=85"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height"content="630"/>
+<meta id="og-title"       property="og:title"       content="Vasilisa Yummy — Phuket's Youngest Food Critic"/>
+<meta id="og-description" property="og:description" content="8-year-old mukbang creator & honest food reviewer based in Phuket, Thailand."/>
 
-      /* ── Meta ─────────────────────────────────────────────── */
-      meta: {
-        title:       "Vasilisa Chugunova — Phuket's Youngest Food Critic",
-        description: "8-year-old mukbang creator & honest food reviewer based in Phuket, Thailand. Partnerships, Media Kit & more.",
-      },
+<!-- Twitter Cards -->
+<meta name="twitter:card"        content="summary_large_image"/>
+<meta name="twitter:site"        content="@VasilisaEats"/>
+<meta id="tw-title"       name="twitter:title"       content="Vasilisa Yummy — Phuket's Youngest Food Critic"/>
+<meta id="tw-desc"        name="twitter:description" content="8-year-old mukbang creator & honest food reviewer based in Phuket, Thailand."/>
+<meta name="twitter:image"       content="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=85"/>
 
-      /* ── Colors (also applied as CSS variables) ──────────── */
-      colors: {
-        coral:    "#FF6B6B",   /* primary brand */
-        turq:     "#00D4C8",   /* secondary */
-        pink:     "#FF4E9C",   /* accent 1 */
-        purple:   "#9B4DFF",   /* accent 2 */
-        gold:     "#FFD43B",   /* food accent */
-        mango:    "#FF9500",   /* warm accent */
-        /* Backgrounds */
-        bgLight:  "#FFFAF4",
-        bgDark:   "#0E0B14",
-        cardLight:"#FFFFFF",
-        cardDark: "#1A1525",
-        /* Text */
-        textLight:"#1C1624",
-        textDark: "#F5F0FF",
-      },
-
-      /* ── Hero ─────────────────────────────────────────────── */
-      hero: {
-        badge:       "🌴 Phuket, Thailand",
-        headline:    "The World's Most Honest Food Critic",
-        accent:      "is 8 years old.",
-        sub:         "Mukbang creator, restaurant reviewer & Thailand's tastiest little influencer. No filter. All flavour.",
-        ctaWork:     { label: "Work With Us 🤝", href: "#contact" },
-        ctaKit:      { label: "Media Kit", href: "#mediakit" },
-        photo:       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=85",
-        floatingEmoji: ["🍜","🌴","⭐","🔥","🍣","🥭"],
-        stats: [
-          { val: "47K+",  label: "Followers"   },
-          { val: "200+",  label: "Restaurants" },
-          { val: "8.4%",  label: "Engagement"  },
-        ],
-      },
-
-      /* ── About ────────────────────────────────────────────── */
-      about: {
-        sectionLabel: "👧 Meet Vasilisa",
-        headline:     ["8 Years Old.", "200+ Restaurants.", "Zero Lies."],
-        body: [
-          "Born in Russia, raised on Phuket's beaches and street-food — Vasilisa has been filming mukbangs and honest food reviews since age 6.",
-          "She tells you exactly what she thinks, whether it's a 5-star resort or a night-market stall. Her audience trusts her because she can't be bought with a free dessert.",
-        ],
-        quote:  "\"If it's bad — I'll say it's bad. Even if the chef is watching.\"",
-        quoteBy: "— Vasilisa, Age 8",
-        facts: [
-          { icon: "🌊", label: "Based in",  value: "Phuket, Thailand" },
-          { icon: "🎂", label: "Age",        value: "8 Years Old"      },
-          { icon: "🍜", label: "Restaurants", value: "200+ Reviewed"   },
-          { icon: "🎬", label: "Videos",     value: "300+ Published"   },
-        ],
-        skills: [
-          { label: "Taste & Texture",        pct: 98, color: "coral"  },
-          { label: "Plating & Presentation", pct: 92, color: "pink"   },
-          { label: "Atmosphere & Vibe",      pct: 87, color: "turq"   },
-        ],
-        photos: [
-          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=380&q=80",
-          "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=380&q=80",
-        ],
-      },
-
-      /* ── Stats / Achievements ticker ─────────────────────── */
-      stats: [
-        { val: "47K+",  label: "Total Followers",    icon: "👥" },
-        { val: "200+",  label: "Restaurants",        icon: "🍽️" },
-        { val: "8.4%",  label: "Engagement Rate",    icon: "📊" },
-        { val: "28",    label: "Cities Visited",     icon: "✈️" },
-        { val: "300+",  label: "Videos",             icon: "🎬" },
-        { val: "6",     label: "Brand Deals",        icon: "🤝" },
+<!-- Structured Data: Person + LocalBusiness -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"Person",
+      "@id":"https://vasilisayummy.com/#person",
+      "name":"Vasilisa Chugunova",
+      "alternateName":"Vasilisa Yummy",
+      "birthDate":"2016",
+      "description":"8-year-old mukbang creator, food reviewer and restaurant critic based in Phuket, Thailand",
+      "url":"https://vasilisayummy.com",
+      "image":"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=85",
+      "sameAs":[
+        "https://youtube.com/@VasilisaEats",
+        "https://instagram.com/vasilisa.eats",
+        "https://tiktok.com/@vasilisaeats",
+        "https://facebook.com/VasilisaEats"
       ],
-      ticker: [
-        { icon: "🏆", text: "Best Young Creator — Phuket Food Awards 2024" },
-        { icon: "📰", text: "Featured in Bangkok Post"                      },
-        { icon: "▶️", text: "Top-10 Kids YouTube Thailand"                 },
-        { icon: "🤝", text: "6+ International Brand Deals"                 },
-        { icon: "⭐", text: "200+ Restaurant Reviews"                      },
-        { icon: "🔥", text: "8.4% Average Engagement Rate"                 },
-        { icon: "🌏", text: "28 Cities Across Southeast Asia"              },
-        { icon: "📖", text: "Featured in Phuket Magazine"                  },
+      "address":{"@type":"PostalAddress","addressLocality":"Phuket","addressCountry":"TH"},
+      "email":"hello@vasilisayummy.com",
+      "knowsLanguage":["en","ru"]
+    },
+    {
+      "@type":"LocalBusiness",
+      "@id":"https://vasilisayummy.com/#business",
+      "name":"Vasilisa Yummy",
+      "description":"Kids food reviewer and media brand based in Phuket, Thailand",
+      "url":"https://vasilisayummy.com",
+      "address":{"@type":"PostalAddress","addressLocality":"Phuket","addressCountry":"TH"},
+      "email":"hello@vasilisayummy.com",
+      "serviceArea":"Thailand, Southeast Asia, Russia",
+      "priceRange":"฿฿"
+    }
+  ]
+}
+</script>
+
+<!-- CDNs (preconnect first for speed) -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+<link rel="dns-prefetch" href="https://images.unsplash.com"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Caveat:wght@600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- ╔══════════════════════════════════════════════════════════════════
+     ║                    SITE CONFIGURATION                          ║
+     ║  ► Edit ALL content, colors, links and data in this object.   ║
+     ║  ► No HTML knowledge required — just change quoted values.    ║
+     ╚══════════════════════════════════════════════════════════════════ -->
+<script>
+window.SITE_CONFIG = {
+
+  /* ─── SETTINGS ──────────────────────────────────────────────────
+     formspreeEndpoint  → Get free endpoint at https://formspree.io
+                          Replace "YOUR_FORM_ID" with your form ID
+     defaultLang        → "en" or "ru"
+     enableDarkMode     → true/false — show dark mode toggle
+  ─────────────────────────────────────────────────────────────── */
+  settings: {
+    formspreeEndpoint: "https://formspree.io/f/YOUR_FORM_ID",
+    defaultLang:       "en",
+    enableDarkMode:    true,
+    siteUrl:           "https://vasilisayummy.com",
+  },
+
+  /* ─── BRAND COLORS ───────────────────────────────────────────────
+     All values flow into CSS custom properties automatically.
+     Change any hex here and the whole site updates.
+  ─────────────────────────────────────────────────────────────── */
+  colors: {
+    coral:    "#FF6B6B",
+    turq:     "#00D4C8",
+    pink:     "#FF4E9C",
+    purple:   "#9B4DFF",
+    gold:     "#FFD43B",
+    mango:    "#FF9500",
+    lime:     "#7ED957",
+    bgLight:  "#FFFAF4",
+    bgDark:   "#0E0B14",
+    cardLight:"#FFFFFF",
+    cardDark: "#1A1525",
+    textLight:"#1C1624",
+    textDark: "#F5F0FF",
+  },
+
+  /* ─── IMAGES ────────────────────────────────────────────────────
+     Replace Unsplash URLs with your real hosted images.
+     Tip: Use Cloudinary, imgix, or Bunny CDN for best performance.
+  ─────────────────────────────────────────────────────────────── */
+  images: {
+    hero:     "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=85",
+    about1:   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=380&q=80",
+    about2:   "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=380&q=80",
+    ogImage:  "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=85",
+    shop: [
+      "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80",
+      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80",
+    ],
+  },
+
+  /* ─── SOCIAL MEDIA LINKS ────────────────────────────────────────
+     Replace each url with the real profile link.
+  ─────────────────────────────────────────────────────────────── */
+  socialLinks: {
+    youtube:   "https://youtube.com/@VasilisaEats",
+    instagram: "https://instagram.com/vasilisa.eats",
+    tiktok:    "https://tiktok.com/@vasilisaeats",
+    facebook:  "https://facebook.com/VasilisaEats",
+  },
+
+  /* ─── CONTACT INFO ───────────────────────────────────────────────
+     Displayed in the Contact section and footer.
+  ─────────────────────────────────────────────────────────────── */
+  contact: {
+    email:    "hello@vasilisayummy.com",
+    telegram: "@vasilisa_manager",
+    whatsapp: "+66 XX XXX XXXX",
+    location: "Phuket, Thailand",
+  },
+
+  /* ─── STATS / ACHIEVEMENTS ───────────────────────────────────────
+     val   → the animated counter value (number + optional suffix)
+     icon  → emoji displayed on the card
+  ─────────────────────────────────────────────────────────────── */
+  stats: [
+    { val:"47K+", icon:"👥", en:"Total Followers",  ru:"Подписчиков"   },
+    { val:"200+", icon:"🍽️", en:"Restaurants",       ru:"Ресторанов"    },
+    { val:"8.4%", icon:"📊", en:"Engagement Rate",   ru:"Вовлечённость" },
+    { val:"28",   icon:"✈️", en:"Cities Visited",    ru:"Городов"       },
+    { val:"300+", icon:"🎬", en:"Videos",            ru:"Видео"         },
+    { val:"6",    icon:"🤝", en:"Brand Deals",       ru:"Бренд-сделок"  },
+  ],
+
+  /* ─── SOCIAL CARDS ───────────────────────────────────────────────
+     Each card in the Socials section.
+     engagement / avgViews → used in PDF media kit
+  ─────────────────────────────────────────────────────────────── */
+  socials: [
+    {
+      name:"YouTube", handle:"@VasilisaEats", followers:"31K",
+      engagement:"9.2%", avgViews:"12K",
+      en:"Full mukbangs, restaurant tours & taste tests",
+      ru:"Мукбанги, туры по ресторанам и вкусовые тесты",
+      urlKey:"youtube",
+      bgGrad:"linear-gradient(135deg,#FF0033 0%,#990022 100%)",
+      icon:`<svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.54 3.6 12 3.6 12 3.6s-7.54 0-9.38.45A3.02 3.02 0 00.5 6.19C.06 8.04 0 12 0 12s.06 3.96.5 5.81a3.02 3.02 0 002.12 2.14C4.46 20.4 12 20.4 12 20.4s7.54 0 9.38-.45a3.02 3.02 0 002.12-2.14C23.94 15.96 24 12 24 12s-.06-3.96-.5-5.81zM9.6 15.6V8.4l6.4 3.6-6.4 3.6z"/></svg>`,
+    },
+    {
+      name:"Instagram", handle:"@vasilisa.eats", followers:"12K",
+      engagement:"8.1%", avgViews:"8.5K",
+      en:"Food photos, Stories & Reels from Phuket",
+      ru:"Фото еды, сторис и рилс из Пхукета",
+      urlKey:"instagram",
+      bgGrad:"linear-gradient(135deg,#833AB4 0%,#E1306C 50%,#F77737 100%)",
+      icon:`<svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`,
+    },
+    {
+      name:"TikTok", handle:"@vasilisaeats", followers:"4K",
+      engagement:"11.5%", avgViews:"22K",
+      en:"Quick reactions, mukbang shorts & viral bites",
+      ru:"Короткие мукбанги, реакции и вирусные ролики",
+      urlKey:"tiktok",
+      bgGrad:"linear-gradient(135deg,#010101 0%,#1a1a3a 100%)",
+      icon:`<svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.2 8.2 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>`,
+    },
+    {
+      name:"Facebook", handle:"Vasilisa Eats", followers:"5K+",
+      engagement:"6.3%", avgViews:"4K",
+      en:"Community, longer reviews & event coverage",
+      ru:"Сообщество, обзоры и репортажи с мероприятий",
+      urlKey:"facebook",
+      bgGrad:"linear-gradient(135deg,#1877F2 0%,#0d4fc2 100%)",
+      icon:`<svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+    },
+  ],
+
+  /* ─── COLLABORATIONS ─────────────────────────────────────────────
+     logoUrl → leave "" to show emoji icon instead
+  ─────────────────────────────────────────────────────────────── */
+  collabs: [
+    { icon:"🎪", logoUrl:"", name:"Phuket Food Festival", en:"Events",      ru:"Мероприятия", year:"2024" },
+    { icon:"🏨", logoUrl:"", name:"Minor Hotels Group",   en:"Hospitality", ru:"Гостиницы",   year:"2024" },
+    { icon:"🐟", logoUrl:"", name:"Thai Union Group",     en:"FMCG",        ru:"FMCG",        year:"2024" },
+    { icon:"🛒", logoUrl:"", name:"Central Food Hall",    en:"Retail",      ru:"Ритейл",      year:"2023" },
+    { icon:"🛵", logoUrl:"", name:"Grab Food SEA",        en:"Delivery",    ru:"Доставка",    year:"2024" },
+    { icon:"🌴", logoUrl:"", name:"TAT Thailand",         en:"Government",  ru:"Гос. орган",  year:"2023" },
+  ],
+
+  /* ─── MEDIA KIT PDF ──────────────────────────────────────────────
+     All content that appears in the generated PDF.
+     audience     → audience geography split (must total 100)
+     ageGroups    → audience age breakdown (must total 100)
+     successCases → case studies shown on page 4
+     formats      → collaboration formats listed
+  ─────────────────────────────────────────────────────────────── */
+  mediakit: {
+    pdfFilename:  "vasilisa-yummy-mediakit-2025.pdf",
+    cpmText:      "From ฿800 CPM",
+    audience:     [
+      { label:"Russia / CIS", pct:65, color:[255,107,107] },
+      { label:"SEA",          pct:20, color:[0,212,200]   },
+      { label:"Europe",       pct:10, color:[155,77,255]  },
+      { label:"Other",        pct:5,  color:[255,212,59]  },
+    ],
+    ageGroups:    [
+      { range:"18-24", pct:22 },
+      { range:"25-34", pct:38 },
+      { range:"35-44", pct:28 },
+      { range:"45+",   pct:12 },
+    ],
+    formats_en: ["Video Integration","Native Review","Stories Package","Live Event","Product Placement","Giveaway"],
+    formats_ru: ["Видеоинтеграция","Нативный обзор","Пакет сторис","Живое мероприятие","Продакт-плейсмент","Розыгрыш"],
+    successCases: [
+      { brand:"Phuket Food Festival", en:"3.2M views, 18% engagement across the series",           ru:"3.2M просмотров, вовлечённость 18%" },
+      { brand:"Minor Hotels",          en:"Family dining package sold out in 48h after review",      ru:"Семейный пакет продан за 48 часов"   },
+      { brand:"Grab Food SEA",         en:"12% CTR on promo code — 5× the industry benchmark",     ru:"12% CTR промокода — в 5× выше рынка" },
+    ],
+    /* Displayed in the media kit card on the website */
+    stats_en: [
+      { val:"47K+",  label:"Combined Reach"  },
+      { val:"8.4%",  label:"Avg. Engagement" },
+      { val:"฿800",  label:"CPM From"        },
+      { val:"4+",    label:"Ad Formats"      },
+    ],
+    stats_ru: [
+      { val:"47K+",  label:"Суммарный охват"  },
+      { val:"8.4%",  label:"Ср. вовлечённость"},
+      { val:"฿800",  label:"CPM от"           },
+      { val:"4+",    label:"Форматов рекламы" },
+    ],
+  },
+
+  /* ─── SHOP ITEMS ─────────────────────────────────────────────────
+     coming:true shows "Coming Soon" overlay.
+  ─────────────────────────────────────────────────────────────── */
+  shop: [
+    { en:"Vasilisa's Food Diary",       ru:"Пищевой дневник Василисы",    price:"฿490", tag_en:"Bestseller", tag_ru:"Хит",     coming:false, imgIdx:0 },
+    { en:"Rating Sticker Pack",          ru:"Набор стикеров с рейтингами", price:"฿190", tag_en:"New",        tag_ru:"Новинка", coming:false, imgIdx:1 },
+    { en:"Mini Chef Apron",              ru:"Мини-фартук шеф-повара",     price:"฿790", tag_en:"Merch",      tag_ru:"Мерч",    coming:true,  imgIdx:2 },
+    { en:"50 Best Phuket Restaurants",   ru:"50 лучших ресторанов Пхукета",price:"฿290", tag_en:"Digital",    tag_ru:"PDF",     coming:true,  imgIdx:3 },
+  ],
+
+  /* ─── i18n TEXT STRINGS ──────────────────────────────────────────
+     Every user-visible string for full EN/RU bilingual support.
+     Add more keys here as the site grows.
+  ─────────────────────────────────────────────────────────────── */
+  i18n: {
+    en: {
+      /* SEO */
+      meta_title:   "Vasilisa Yummy — Phuket's Youngest Food Critic",
+      meta_desc:    "Vasilisa Chugunova, 8 years old — mukbang creator & honest restaurant critic based in Phuket, Thailand.",
+      /* Nav */
+      nav_about:    "About", nav_stats:"Stats", nav_socials:"Socials",
+      nav_mediakit: "Media Kit", nav_shop:"Shop", nav_collab:"Collab",
+      /* Hero */
+      hero_badge:   "🌴 Phuket, Thailand",
+      hero_h1:      "The World's Most Honest Food Critic",
+      hero_accent:  "is 8 years old.",
+      hero_sub:     "Mukbang creator, restaurant reviewer & Thailand's tastiest little influencer. No filter. All flavour.",
+      hero_cta1:    "Work With Us",
+      hero_cta2:    "Media Kit ↓",
+      hero_stat_followers:   "Followers",
+      hero_stat_restaurants: "Restaurants",
+      hero_stat_engagement:  "Engagement",
+      /* About */
+      about_pill:   "Meet Vasilisa",
+      about_h2a:    "8 Years Old.", about_h2b:"200+ Restaurants.", about_h2c:"Zero Lies.",
+      about_p1:     "Born in Russia, raised on Phuket's beaches and street-food — Vasilisa has been filming mukbangs and honest food reviews since age 6.",
+      about_p2:     "She tells you exactly what she thinks, whether it's a 5-star resort or a night-market stall. Her audience trusts her because she can't be bought with a free dessert.",
+      about_quote:  '"If it\'s bad — I\'ll say it\'s bad. Even if the chef is watching."',
+      about_quoteBy:"— Vasilisa, Age 8",
+      about_flag:   "🇹🇭 Phuket-based",
+      fact_location_label:"Based in",    fact_location_val:"Phuket, Thailand",
+      fact_age_label:     "Age",         fact_age_val:      "8 Years Old",
+      fact_rest_label:    "Restaurants", fact_rest_val:     "200+ Reviewed",
+      fact_vid_label:     "Videos",      fact_vid_val:      "300+ Published",
+      skill1:"Taste & Texture",   skill2:"Plating & Presentation", skill3:"Atmosphere & Vibe",
+      /* Achievements */
+      ach_pill:  "By The Numbers",
+      ach_h2a:   "Stats That ", ach_h2b:"Don't Lie",
+      aw1_title: "Best Young Creator",  aw1_sub:"Phuket Food Awards 2024",
+      aw2_title: "Featured on Thai TV", aw2_sub:"Good Morning Thailand, Channel 3",
+      aw3_title: "Press Coverage",      aw3_sub:"Bangkok Post · Phuket Magazine · TAT",
+      ticker1: [
+        {icon:"🏆",text:"Best Young Creator — Phuket Food Awards 2024"},
+        {icon:"📰",text:"Featured in Bangkok Post"},
+        {icon:"▶️",text:"Top-10 Kids YouTube Thailand"},
+        {icon:"🤝",text:"6+ International Brand Deals"},
+        {icon:"⭐",text:"200+ Restaurant Reviews"},
+        {icon:"🔥",text:"8.4% Average Engagement Rate"},
+        {icon:"🌏",text:"28 Cities Across Southeast Asia"},
+        {icon:"📖",text:"Featured in Phuket Magazine"},
       ],
-
-      /* ── Social Media ─────────────────────────────────────── */
-      socials: [
-        {
-          name: "YouTube",  handle: "@VasilisaEats", followers: "31K",
-          desc: "Full mukbangs, restaurant tours & taste tests",
-          url:  "https://youtube.com",
-          bgGrad: "linear-gradient(135deg,#FF0033 0%,#990022 100%)",
-          iconSvg: `<svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.54 3.6 12 3.6 12 3.6s-7.54 0-9.38.45A3.02 3.02 0 00.5 6.19C.06 8.04 0 12 0 12s.06 3.96.5 5.81a3.02 3.02 0 002.12 2.14C4.46 20.4 12 20.4 12 20.4s7.54 0 9.38-.45a3.02 3.02 0 002.12-2.14C23.94 15.96 24 12 24 12s-.06-3.96-.5-5.81zM9.6 15.6V8.4l6.4 3.6-6.4 3.6z"/></svg>`,
-        },
-        {
-          name: "Instagram", handle: "@vasilisa.eats", followers: "12K",
-          desc: "Food photos, Stories & Reels from Phuket",
-          url:  "https://instagram.com",
-          bgGrad: "linear-gradient(135deg,#833AB4 0%,#E1306C 50%,#F77737 100%)",
-          iconSvg: `<svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`,
-        },
-        {
-          name: "TikTok", handle: "@vasilisaeats", followers: "4K",
-          desc: "Quick reactions, mukbang shorts & viral bites",
-          url:  "https://tiktok.com",
-          bgGrad: "linear-gradient(135deg,#010101 0%,#1a1a3a 100%)",
-          iconSvg: `<svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.2 8.2 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>`,
-        },
-        {
-          name: "Facebook", handle: "Vasilisa Eats", followers: "5K+",
-          desc: "Community, longer reviews & event coverage",
-          url:  "https://facebook.com",
-          bgGrad: "linear-gradient(135deg,#1877F2 0%,#0d4fc2 100%)",
-          iconSvg: `<svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
-        },
+      ticker2:[
+        {icon:"🌴",text:"Phuket Based"},
+        {icon:"🍜",text:"Authentic Reviews"},
+        {icon:"🎬",text:"Video Content"},
+        {icon:"🤝",text:"Brand Partnerships"},
+        {icon:"🇹🇭",text:"Thailand & SEA Focus"},
+        {icon:"💯",text:"100% Honest"},
+        {icon:"📱",text:"Multi-Platform"},
+        {icon:"⭐",text:"Top-Rated Creator"},
       ],
-
-      /* ── Collaborations ───────────────────────────────────── */
-      collabs: [
-        { name: "Phuket Food Festival",  cat: "Events",     year: "2024", icon: "🎪" },
-        { name: "Minor Hotels Group",    cat: "Hospitality",year: "2024", icon: "🏨" },
-        { name: "Thai Union Group",      cat: "FMCG",       year: "2024", icon: "🐟" },
-        { name: "Central Food Hall",     cat: "Retail",     year: "2023", icon: "🛒" },
-        { name: "Grab Food SEA",         cat: "Delivery",   year: "2024", icon: "🛵" },
-        { name: "Tourism Authority (TAT)",cat:"Government", year: "2023", icon: "🌴" },
+      /* Socials */
+      soc_pill:   "Find Us Online",
+      soc_h2a:    "Join ", soc_h2b:"47K+", soc_h2c:" Followers",
+      soc_sub:    "Across platforms — from full mukbangs to quick bites",
+      soc_follow: "Follow",
+      /* Collabs */
+      col_pill:   "Partners",
+      col_h2a:    "Brands That ", col_h2b:"Trusted Her",
+      /* Media Kit */
+      mk_pill:    "📦 For Brands",
+      mk_h2a:     "Media ", mk_h2b:"Kit ", mk_h2c:"2025",
+      mk_official:"Official Brand Document",
+      mk_title:   "Vasilisa's\nMedia Kit",
+      mk_sub:     "Everything brands need to collaborate with Vasilisa — audience data, formats, case studies & rates.",
+      mk_audience:"Primary: Families & Moms 25–45, SEA + Russia",
+      mk_aud_title:"Audience Split",
+      mk_dl:      "Download Media Kit PDF",
+      mk_formats_label:"Collaboration Formats",
+      /* Contact */
+      ct_pill:    "💌 Get In Touch",
+      ct_h2a:     "Ready to", ct_h2b:"Work Together?",
+      ct_body:    "Open for brand integrations, restaurant reviews, event appearances & custom content. All enquiries go through Mom Katya 👩.",
+      ct_email:   "Brand email",
+      ct_tg:      "Telegram",
+      ct_wa:      "WhatsApp",
+      ct_loc:     "Location",
+      f_name:     "Your Name *",        f_name_ph:"Jane Smith",
+      f_brand:    "Brand / Company *",  f_brand_ph:"Your brand name",
+      f_email:    "Email *",            f_email_ph:"you@brand.com",
+      f_format:   "Format",
+      f_formats:  ["Video Integration","Native Review","Stories Package","Live Event","Other"],
+      f_msg:      "Tell us about the project", f_msg_ph:"Brief, timeline, budget…",
+      f_submit:   "Send Request 🚀",
+      f_sending:  "Sending…",
+      f_ok_title: "Request Sent! 🎉",
+      f_ok_body:  "Mom Katya will get back to you within 24 hours. Excited to work together!",
+      f_err:      "Oops! Something went wrong. Please email us directly.",
+      /* Shop */
+      shop_pill:  "🛍️ Merch & Goodies",
+      shop_h2a:   "The ", shop_h2b:"Shop",
+      shop_soon:  "Coming Soon",
+      shop_add:   "Add",
+      /* Coming Soon */
+      cs_pill:    "🚧 In Development",
+      cs_h2a:     "What's ", cs_h2b:"Coming",
+      cs_items:   [
+        {icon:"✍️", title:"Blog",    desc:"Long-form essays & travel food guides"},
+        {icon:"🎙️", title:"Podcast", desc:'"At The Table" — food talks with chefs'},
+        {icon:"👩‍🍳", title:"Recipes", desc:"Easy Thai recipes kids can actually cook"},
       ],
+      /* Footer */
+      ft_links:   "Quick Links",
+      ft_contact: "Contact",
+      ft_copy:    "© 2025 Vasilisa Chugunova. All rights reserved.",
+      ft_tag:     "Made with ❤️ & pad thai in Phuket 🌴",
+    },
 
-      /* ── Media Kit ────────────────────────────────────────── */
-      mediakit: {
-        sectionLabel: "📦 For Brands",
-        headline:     "Media Kit 2025",
-        sub:          "Everything brands need to collaborate with Vasilisa — audience data, formats, case studies & rates.",
-        downloadUrl:  "#",           /* ← replace with real PDF link */
-        downloadLabel:"Download Media Kit PDF",
-        stats: [
-          { val: "47K+", label: "Combined Reach"   },
-          { val: "8.4%", label: "Avg. Engagement"  },
-          { val: "฿800", label: "CPM From"         },
-          { val: "4",    label: "Ad Formats"        },
-        ],
-        formats: ["Video Integration","Native Review","Stories Package","Live Event"],
-        audience: "Primary: Families & Moms 25–45, SEA + Russia",
-        audienceSplit: [
-          { label: "Russia",    pct: 65, color: "coral"  },
-          { label: "SEA",       pct: 20, color: "turq"   },
-          { label: "Other",     pct: 15, color: "purple" },
-        ],
-      },
-
-      /* ── Contact / Work with Us ───────────────────────────── */
-      contact: {
-        sectionLabel: "💌 Get In Touch",
-        headline:     ["Ready to", "Work Together?"],
-        body:         "Open for brand integrations, restaurant reviews, event appearances & custom content. All enquiries go through Mom Katya 👩.",
-        infoPills: [
-          { icon: "📧", label: "Brand email",  val: "hello@vasilisaeats.com"   },
-          { icon: "💬", label: "Telegram",      val: "@vasilisa_manager"        },
-          { icon: "🌴", label: "Location",      val: "Phuket, Thailand"          },
-        ],
-        formFields: {
-          name:    { label: "Your Name *",        placeholder: "Jane Smith"        },
-          brand:   { label: "Brand / Company *",  placeholder: "Your brand name"   },
-          email:   { label: "Email *",            placeholder: "you@brand.com"     },
-          format:  { label: "Format",             options: ["Video Integration","Native Review","Stories Package","Live Event","Other"] },
-          message: { label: "Tell us about the project", placeholder: "Brief, timeline, budget…" },
-        },
-        submitLabel: "Send Request 🚀",
-        successTitle: "Request Sent! 🎉",
-        successBody:  "Mom Katya will get back to you within 24 hours. Excited to work together!",
-      },
-
-      /* ── Shop ─────────────────────────────────────────────── */
-      shop: [
-        { name: "Vasilisa's Food Diary",    price: "฿490", tag: "Bestseller", img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80", coming: false },
-        { name: "Rating Sticker Pack",      price: "฿190", tag: "New",        img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80", coming: false },
-        { name: "Mini Chef Apron",          price: "฿790", tag: "Merch",      img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80", coming: true  },
-        { name: "50 Best Phuket Restaurants (PDF)", price: "฿290", tag: "Digital", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80", coming: true },
+    ru: {
+      /* SEO */
+      meta_title:   "Василиса Ямми — Самый Молодой Ресторанный Критик Пхукета",
+      meta_desc:    "Василиса Чугунова, 8 лет — мукбанг-блогер и честный ресторанный критик из Пхукета, Таиланд.",
+      /* Nav */
+      nav_about:    "О нас", nav_stats:"Статистика", nav_socials:"Соцсети",
+      nav_mediakit: "Медиакит", nav_shop:"Магазин", nav_collab:"Сотрудничество",
+      /* Hero */
+      hero_badge:   "🌴 Пхукет, Таиланд",
+      hero_h1:      "Самый Честный Ресторанный Критик в Мире",
+      hero_accent:  "ей всего 8 лет.",
+      hero_sub:     "Мукбанг-блогер, ресторанный критик и самый вкусный маленький инфлюенсер Таиланда. Без фильтров.",
+      hero_cta1:    "Сотрудничество",
+      hero_cta2:    "Медиакит ↓",
+      hero_stat_followers:   "Подписчики",
+      hero_stat_restaurants: "Рестораны",
+      hero_stat_engagement:  "Вовлечённость",
+      /* About */
+      about_pill:   "Знакомьтесь",
+      about_h2a:    "8 лет.", about_h2b:"200+ ресторанов.", about_h2c:"Ноль лжи.",
+      about_p1:     "Родилась в России, выросла на пляжах Пхукета и уличной еде — Василиса снимает мукбанги и честные обзоры с 6 лет.",
+      about_p2:     "Она говорит ровно то, что думает — будь то 5-звёздочный курорт или ночной рынок. Её аудитория доверяет ей, потому что её не купишь бесплатным десертом.",
+      about_quote:  "«Если невкусно — скажу, что невкусно. Даже если шеф-повар стоит рядом.»",
+      about_quoteBy:"— Василиса, 8 лет",
+      about_flag:   "🇹🇭 Живёт в Пхукете",
+      fact_location_label:"Живёт в",   fact_location_val:"Пхукет, Таиланд",
+      fact_age_label:     "Возраст",   fact_age_val:      "8 лет",
+      fact_rest_label:    "Ресторанов",fact_rest_val:     "200+ обзоров",
+      fact_vid_label:     "Видео",     fact_vid_val:      "300+ опубликовано",
+      skill1:"Вкус и текстура", skill2:"Подача и эстетика", skill3:"Атмосфера и сервис",
+      /* Achievements */
+      ach_pill:  "Цифры",
+      ach_h2a:   "Статистика ", ach_h2b:"говорит сама",
+      aw1_title: "Лучший молодой блогер",  aw1_sub:"Phuket Food Awards 2024",
+      aw2_title: "Эфир на тайском ТВ",    aw2_sub:"Good Morning Thailand, Channel 3",
+      aw3_title: "Публикации в СМИ",       aw3_sub:"Bangkok Post · Phuket Magazine · TAT",
+      ticker1:[
+        {icon:"🏆",text:"Лучший молодой блогер — Phuket Food Awards 2024"},
+        {icon:"📰",text:"Публикация в Bangkok Post"},
+        {icon:"▶️",text:"Топ-10 детских YouTube Таиланда"},
+        {icon:"🤝",text:"6+ международных брендов"},
+        {icon:"⭐",text:"200+ ресторанных обзоров"},
+        {icon:"🔥",text:"Вовлечённость 8.4%"},
+        {icon:"🌏",text:"28 городов Юго-Восточной Азии"},
+        {icon:"📖",text:"Публикация в Phuket Magazine"},
       ],
-
-      /* ── Coming Soon ──────────────────────────────────────── */
-      comingSoon: [
-        { icon: "✍️", title: "Blog",    desc: "Long-form essays & travel food guides"          },
-        { icon: "🎙️", title: "Podcast", desc: "\"At The Table\" — food talks with chefs"       },
-        { icon: "👩‍🍳", title: "Recipes", desc: "Easy Thai recipes kids can actually cook"       },
+      ticker2:[
+        {icon:"🌴",text:"Живёт в Пхукете"},
+        {icon:"🍜",text:"Честные обзоры"},
+        {icon:"🎬",text:"Видео-контент"},
+        {icon:"🤝",text:"Партнёрства"},
+        {icon:"🇹🇭",text:"Таиланд и ЮВА"},
+        {icon:"💯",text:"100% честно"},
+        {icon:"📱",text:"Мультиплатформенно"},
+        {icon:"⭐",text:"Топ-блогер"},
       ],
+      /* Socials */
+      soc_pill:   "Мы в соцсетях",
+      soc_h2a:    "Присоединяйтесь к ", soc_h2b:"47K+", soc_h2c:" подписчиков",
+      soc_sub:    "Смотрите мукбанги и обзоры на всех платформах",
+      soc_follow: "Подписаться",
+      /* Collabs */
+      col_pill:   "Партнёры",
+      col_h2a:    "Бренды, которые ", col_h2b:"доверились ей",
+      /* Media Kit */
+      mk_pill:    "📦 Для брендов",
+      mk_h2a:     "Медиа-", mk_h2b:"кит ", mk_h2c:"2025",
+      mk_official:"Официальный документ для брендов",
+      mk_title:   "Медиакит\nВасилисы",
+      mk_sub:     "Всё для сотрудничества: данные об аудитории, форматы, кейсы и тарифы.",
+      mk_audience:"Аудитория: семьи и мамы 25–45, ЮВА + Россия",
+      mk_aud_title:"Аудитория",
+      mk_dl:      "Скачать медиакит PDF",
+      mk_formats_label:"Форматы сотрудничества",
+      /* Contact */
+      ct_pill:    "💌 Напишите нам",
+      ct_h2a:     "Готовы к", ct_h2b:"Сотрудничеству?",
+      ct_body:    "Открыты для интеграций, обзоров ресторанов, участия в мероприятиях и кастомного контента. Запросы — через маму Катю 👩.",
+      ct_email:   "Email для брендов",
+      ct_tg:      "Telegram",
+      ct_wa:      "WhatsApp",
+      ct_loc:     "Местоположение",
+      f_name:     "Ваше имя *",           f_name_ph:"Иван Петров",
+      f_brand:    "Бренд / Компания *",   f_brand_ph:"Название бренда",
+      f_email:    "Email *",              f_email_ph:"you@brand.com",
+      f_format:   "Формат",
+      f_formats:  ["Видеоинтеграция","Нативный обзор","Пакет сторис","Живое мероприятие","Другое"],
+      f_msg:      "О проекте",            f_msg_ph:"Бриф, сроки, бюджет…",
+      f_submit:   "Отправить заявку 🚀",
+      f_sending:  "Отправляем…",
+      f_ok_title: "Заявка отправлена! 🎉",
+      f_ok_body:  "Мама Катя свяжется с вами в течение 24 часов. Рады сотрудничеству!",
+      f_err:      "Ошибка! Напишите нам напрямую на email.",
+      /* Shop */
+      shop_pill:  "🛍️ Товары",
+      shop_h2a:   "", shop_h2b:"Магазин",
+      shop_soon:  "Скоро",
+      shop_add:   "В корзину",
+      /* Coming Soon */
+      cs_pill:    "🚧 В разработке",
+      cs_h2a:     "Что ", cs_h2b:"готовится",
+      cs_items:   [
+        {icon:"✍️", title:"Блог",    desc:"Длинные статьи и гастрономические путешествия"},
+        {icon:"🎙️", title:"Подкаст", desc:"«За столом» — разговоры о еде с шефами"},
+        {icon:"👩‍🍳", title:"Рецепты", desc:"Простые тайские рецепты, которые дети могут готовить"},
+      ],
+      /* Footer */
+      ft_links:   "Быстрые ссылки",
+      ft_contact: "Контакты",
+      ft_copy:    "© 2025 Василиса Чугунова. Все права защищены.",
+      ft_tag:     "Сделано с ❤️ и пад-таем в Пхукете 🌴",
+    },
+  },
 
-      /* ── Footer ───────────────────────────────────────────── */
-      footer: {
-        copy:    "© 2025 Vasilisa Chugunova. All rights reserved.",
-        tagline: "Made with ❤️ & pad thai in Phuket 🌴",
-      },
+}; /* ← end SITE_CONFIG */
+</script>
 
-    }; /* end SITE_CONFIG */
-  </script>
+<!-- ═══════════════════════════════════════════════════════════
+     GLOBAL STYLES
+═══════════════════════════════════════════════════════════ -->
+<style>
+/* @property for smooth animated conic gradient */
+@property --rot { syntax:"<angle>"; initial-value:0deg; inherits:false; }
 
-  <!-- ══════════════════════════════════════════════════════════
-       GLOBAL STYLES
-  ════════════════════════════════════════════════════════════ -->
-  <style>
-    /* ── CSS Custom Properties injected at runtime, mirrored from config ── */
-    :root {
-      --coral:   #FF6B6B;
-      --turq:    #00D4C8;
-      --pink:    #FF4E9C;
-      --purple:  #9B4DFF;
-      --gold:    #FFD43B;
-      --mango:   #FF9500;
-      --bg-l:    #FFFAF4;
-      --bg-d:    #0E0B14;
-      --card-l:  #FFFFFF;
-      --card-d:  #1A1525;
-      --text-l:  #1C1624;
-      --text-d:  #F5F0FF;
+/* ── Design tokens (overridden at runtime by JS) ── */
+:root {
+  --coral:#FF6B6B; --turq:#00D4C8; --pink:#FF4E9C; --purple:#9B4DFF;
+  --gold:#FFD43B;  --mango:#FF9500; --lime:#7ED957;
+  --bg-l:#FFFAF4;  --bg-d:#0E0B14;
+  --card-l:#FFFFFF;--card-d:#1A1525;
+  --text-l:#1C1624;--text-d:#F5F0FF;
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+  --ease-expo:   cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Nunito',sans-serif;
+  background:var(--bg-l); color:var(--text-l);
+  overflow-x:hidden; transition:background .4s,color .4s;
+  /* No custom cursor needed — using default */
+}
+.dark { background:var(--bg-d)!important; color:var(--text-d); }
 
-      /* @property for animatable gradient angle */
-      --rot:  0deg;
-    }
-    @property --rot { syntax:"<angle>"; initial-value:0deg; inherits:false; }
+/* ── Gradient text helpers ── */
+.gt-coral  { background:linear-gradient(135deg,var(--coral),var(--mango)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.gt-trio   { background:linear-gradient(135deg,var(--coral),var(--pink),var(--purple)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.gt-warm   { background:linear-gradient(135deg,var(--gold),var(--mango),var(--coral)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 
-    /* ── Base ─────────────────────────────────── */
-    *,*::before,*::after { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body {
-      font-family:'Nunito',sans-serif;
-      background:var(--bg-l);
-      color:var(--text-l);
-      overflow-x:hidden;
-      transition: background .4s, color .4s;
-    }
-    .dark body, .dark { --bg: var(--bg-d); --card: var(--card-d); --txt: var(--text-d); }
-    .dark { background: var(--bg-d) !important; color: var(--text-d); }
+/* ── Fonts ── */
+.ff-fraunces { font-family:'Fraunces',Georgia,serif; }
+.ff-caveat   { font-family:'Caveat',cursive; }
 
-    /* ── Custom cursor ─────────────────────────── */
-    * { cursor: none !important; }
-    #cur, #cur-ring {
-      position:fixed; border-radius:50%; pointer-events:none; z-index:9999; top:0; left:0;
-      transform:translate(-50%,-50%);
-    }
-    #cur { width:14px; height:14px; background:var(--coral); transition:transform .12s, background .3s; mix-blend-mode:multiply; }
-    #cur-ring { width:40px; height:40px; border:2px solid var(--pink); opacity:.5; transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .3s; }
-    .dark #cur { mix-blend-mode:screen; }
-    a:hover ~ #cur, button:hover ~ #cur { transform:translate(-50%,-50%) scale(2.5); }
+/* ── Section label pill ── */
+.s-pill {
+  display:inline-flex; align-items:center; gap:.4rem;
+  padding:.32rem .95rem; border-radius:99px;
+  background:rgba(255,107,107,.1); color:var(--coral);
+  font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+}
+.dark .s-pill { background:rgba(255,107,107,.18); }
 
-    /* ── Fonts ─────────────────────────────────── */
-    .ff-fraunces { font-family:'Fraunces',Georgia,serif; }
-    .ff-caveat   { font-family:'Caveat',cursive; }
-    .ff-nunito   { font-family:'Nunito',sans-serif; }
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-thumb { background:linear-gradient(var(--coral),var(--pink)); border-radius:3px; }
+::selection { background:rgba(255,107,107,.22); }
 
-    /* ── Gradient text ─────────────────────────── */
-    .gt-coral  { background:linear-gradient(135deg,var(--coral),var(--mango)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-    .gt-cool   { background:linear-gradient(135deg,var(--pink),var(--purple)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-    .gt-trio   { background:linear-gradient(135deg,var(--coral),var(--pink),var(--purple)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-    .gt-warm   { background:linear-gradient(135deg,var(--gold),var(--mango),var(--coral)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+/* ══════════════════════════
+   SCROLL-DRIVEN REVEAL
+══════════════════════════ */
+@keyframes revUp    { from{opacity:0;translate:0 48px}  to{opacity:1;translate:0 0} }
+@keyframes revLeft  { from{opacity:0;translate:-48px 0} to{opacity:1;translate:0 0} }
+@keyframes revRight { from{opacity:0;translate:48px 0}  to{opacity:1;translate:0 0} }
+@keyframes revScale { from{opacity:0;scale:.84}          to{opacity:1;scale:1}       }
+.rv-up    { animation:revUp    both; animation-timeline:view(); animation-range:entry 0% entry 28%; }
+.rv-left  { animation:revLeft  both; animation-timeline:view(); animation-range:entry 0% entry 28%; }
+.rv-right { animation:revRight both; animation-timeline:view(); animation-range:entry 0% entry 28%; }
+.rv-scale { animation:revScale both; animation-timeline:view(); animation-range:entry 0% entry 22%; }
+.stg>*:nth-child(1){animation-delay:0ms}   .stg>*:nth-child(2){animation-delay:75ms}
+.stg>*:nth-child(3){animation-delay:150ms}  .stg>*:nth-child(4){animation-delay:225ms}
+.stg>*:nth-child(5){animation-delay:300ms}  .stg>*:nth-child(6){animation-delay:375ms}
 
-    /* ── Scrollbar ─────────────────────────────── */
-    ::-webkit-scrollbar { width:5px; }
-    ::-webkit-scrollbar-track { background:transparent; }
-    ::-webkit-scrollbar-thumb { background:linear-gradient(var(--coral),var(--pink)); border-radius:3px; }
-    ::selection { background:rgba(255,107,107,.25); }
+/* ══════════════════════════
+   HERO ANIMATIONS
+══════════════════════════ */
+@keyframes heroEntry { from{opacity:0;translate:0 55px;filter:blur(10px)} to{opacity:1;translate:0 0;filter:blur(0)} }
+@keyframes imgFloat  { 0%,100%{translate:0 0;rotate:-1.5deg} 50%{translate:0 -20px;rotate:1.5deg} }
+@keyframes orbDrift  { 0%,100%{translate:0 0;scale:1} 33%{translate:38px -28px;scale:1.1} 66%{translate:-22px 16px;scale:.92} }
+@keyframes badgePop  { 0%{scale:0;rotate:-14deg;opacity:0} 70%{scale:1.08;rotate:3deg} 100%{scale:1;rotate:0;opacity:1} }
+@keyframes emojiFloat{ 0%{translate:0 0;rotate:0deg;opacity:.85} 30%{translate:8px -35px;rotate:14deg} 75%{translate:-5px -75px;rotate:-9deg} 100%{translate:2px -120px;rotate:6deg;opacity:0} }
+.h-in1{animation:heroEntry 1s var(--ease-expo) .05s both}
+.h-in2{animation:heroEntry 1s var(--ease-expo) .18s both}
+.h-in3{animation:heroEntry 1s var(--ease-expo) .32s both}
+.h-in4{animation:heroEntry 1s var(--ease-expo) .46s both}
+.h-in5{animation:heroEntry 1s var(--ease-spring) .6s both}
+.hero-img  { animation:heroEntry 1.1s var(--ease-expo) .25s both, imgFloat 7s ease-in-out 1.5s infinite }
+.badge-pop { animation:badgePop .9s var(--ease-spring) 1.1s both }
+.orb { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; mix-blend-mode:multiply; animation:orbDrift ease-in-out infinite; }
+.dark .orb { mix-blend-mode:screen; opacity:.45; }
+.e-particle { position:absolute; pointer-events:none; font-size:1.6rem; animation:emojiFloat linear infinite; }
 
-    /* ── Section label pill ────────────────────── */
-    .s-pill {
-      display:inline-flex; align-items:center; gap:.4rem;
-      padding:.35rem 1rem; border-radius:99px;
-      background:rgba(255,107,107,.1); color:var(--coral);
-      font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
-    }
-    .dark .s-pill { background:rgba(255,107,107,.18); }
+/* ══════════════════════════
+   NAV
+══════════════════════════ */
+.nav-glass {
+  backdrop-filter:blur(24px) saturate(180%);
+  background:rgba(255,250,244,.86);
+  border-bottom:1px solid rgba(255,107,107,.1);
+  transition:background .4s, padding .3s, box-shadow .3s;
+}
+.dark .nav-glass { background:rgba(14,11,20,.9); border-bottom:1px solid rgba(255,107,107,.14); }
+.nav-link { position:relative; font-weight:700; font-size:.84rem; transition:color .25s; }
+.nav-link::after {
+  content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px;
+  border-radius:2px; background:linear-gradient(90deg,var(--coral),var(--pink));
+  transition:width .3s var(--ease-spring);
+}
+.nav-link:hover::after { width:100%; }
 
-    /* ══════════════════════════════════════════
-       SCROLL-DRIVEN REVEAL ANIMATIONS
-    ══════════════════════════════════════════ */
-    @keyframes revUp    { from{opacity:0;translate:0 50px}    to{opacity:1;translate:0 0} }
-    @keyframes revLeft  { from{opacity:0;translate:-50px 0}   to{opacity:1;translate:0 0} }
-    @keyframes revRight { from{opacity:0;translate:50px 0}    to{opacity:1;translate:0 0} }
-    @keyframes revScale { from{opacity:0;scale:.82}            to{opacity:1;scale:1}        }
-    @keyframes revFade  { from{opacity:0}                      to{opacity:1}                }
+/* ══════════════════════════
+   PANDA MASCOT ANIMATIONS
+══════════════════════════ */
+@keyframes pandaEat  { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-4px) rotate(2deg)} }
+@keyframes pandaChew { 0%,100%{transform:scaleY(1) scaleX(1)} 40%{transform:scaleY(.75) scaleX(1.1)} }
+@keyframes pandaEye  { 0%,90%,100%{transform:scaleY(1)} 95%{transform:scaleY(.1)} }
+@keyframes pandaWave { 0%,100%{transform:rotate(0)} 50%{transform:rotate(-20deg)} }
+@keyframes steamRise { 0%{opacity:.8;transform:translateY(0) scaleX(1)} 100%{opacity:0;transform:translateY(-14px) scaleX(.6)} }
+.panda-body  { animation:pandaEat  .6s ease-in-out infinite; }
+.panda-mouth { animation:pandaChew .5s ease-in-out infinite; }
+.panda-eye   { animation:pandaEye  3.5s ease-in-out infinite; }
+.panda-arm   { animation:pandaWave 1.2s ease-in-out infinite; transform-origin:top center; }
+.steam-1     { animation:steamRise 1s ease-out .0s infinite; }
+.steam-2     { animation:steamRise 1s ease-out .35s infinite; }
+.steam-3     { animation:steamRise 1s ease-out .7s infinite; }
 
-    .rv-up    { animation:revUp    both; animation-timeline:view(); animation-range:entry 0% entry 28%; }
-    .rv-left  { animation:revLeft  both; animation-timeline:view(); animation-range:entry 0% entry 28%; }
-    .rv-right { animation:revRight both; animation-timeline:view(); animation-range:entry 0% entry 28%; }
-    .rv-scale { animation:revScale both; animation-timeline:view(); animation-range:entry 0% entry 22%; }
-    .rv-fade  { animation:revFade  both; animation-timeline:view(); animation-range:entry 0% entry 30%; }
+/* ══════════════════════════
+   TICKER
+══════════════════════════ */
+@keyframes tickFwd { from{translate:0 0} to{translate:-50% 0} }
+@keyframes tickRev { from{translate:-50% 0} to{translate:0 0} }
+.tick-track     { display:flex; width:max-content; animation:tickFwd 28s linear infinite; }
+.tick-track-rev { display:flex; width:max-content; animation:tickRev 22s linear infinite; }
+.tick-wrap:hover .tick-track,
+.tick-wrap:hover .tick-track-rev { animation-play-state:paused; }
 
-    /* Stagger children */
-    .stg > *:nth-child(1){animation-delay:0ms}
-    .stg > *:nth-child(2){animation-delay:80ms}
-    .stg > *:nth-child(3){animation-delay:160ms}
-    .stg > *:nth-child(4){animation-delay:240ms}
-    .stg > *:nth-child(5){animation-delay:320ms}
-    .stg > *:nth-child(6){animation-delay:400ms}
+/* ══════════════════════════
+   ROTATING BORDER (MK)
+══════════════════════════ */
+@keyframes rotBorder { to{--rot:360deg} }
+.mk-ring { padding:3px; border-radius:32px; background:conic-gradient(from var(--rot),var(--coral),var(--pink),var(--purple),var(--turq),var(--gold),var(--coral)); animation:rotBorder 6s linear infinite; }
+.mk-inner { border-radius:29px; overflow:hidden; }
 
-    /* ══════════════════════════════════════════
-       HERO ANIMATIONS
-    ══════════════════════════════════════════ */
-    @keyframes heroEntry { from{opacity:0;translate:0 60px;filter:blur(10px)} to{opacity:1;translate:0 0;filter:blur(0)} }
-    @keyframes imgFloat  { 0%,100%{translate:0 0;rotate:-1.5deg} 50%{translate:0 -20px;rotate:1.5deg} }
-    @keyframes orbDrift  {
-      0%,100%{translate:0 0;scale:1}
-      33%{translate:40px -30px;scale:1.12}
-      66%{translate:-25px 18px;scale:.9}
-    }
-    @keyframes badgePop  { 0%{scale:0;rotate:-12deg;opacity:0} 70%{scale:1.1;rotate:3deg} 100%{scale:1;rotate:0;opacity:1} }
-    @keyframes fadeSlideUp { from{opacity:0;translate:0 30px} to{opacity:1;translate:0 0} }
+/* ── Shimmer text ── */
+@keyframes shimmer { from{background-position:-200% center} to{background-position:200% center} }
+.shim { background:linear-gradient(90deg,var(--gold) 0%,#fff 40%,var(--gold) 60%,var(--mango) 100%); background-size:200% auto; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:shimmer 3.5s linear infinite; }
 
-    .h-in1 { animation:heroEntry 1s cubic-bezier(.16,1,.3,1) .05s both }
-    .h-in2 { animation:heroEntry 1s cubic-bezier(.16,1,.3,1) .2s  both }
-    .h-in3 { animation:heroEntry 1s cubic-bezier(.16,1,.3,1) .35s both }
-    .h-in4 { animation:heroEntry 1s cubic-bezier(.16,1,.3,1) .5s  both }
-    .h-in5 { animation:heroEntry 1s cubic-bezier(.34,1.56,.64,1) .65s both }
-    .hero-img { animation:heroEntry 1.1s cubic-bezier(.16,1,.3,1) .28s both, imgFloat 7s ease-in-out 1.6s infinite }
-    .badge-pop { animation:badgePop .9s cubic-bezier(.34,1.56,.64,1) 1.1s both }
+/* ══════════════════════════
+   DOWNLOAD BUTTON
+══════════════════════════ */
+@keyframes dlPulse { 0%{opacity:.55;scale:1} 100%{opacity:0;scale:1.72} }
+.dl-btn {
+  position:relative; display:inline-flex; align-items:center; gap:.65rem;
+  padding:1rem 2.3rem; border-radius:99px;
+  background:linear-gradient(135deg,var(--gold),var(--mango),var(--coral));
+  color:#1a1000; font-weight:800; font-size:1.02rem;
+  border:none; text-decoration:none; z-index:1; will-change:transform;
+  transition:translate .3s var(--ease-spring), box-shadow .3s;
+  box-shadow:0 8px 28px rgba(255,107,107,.35); white-space:nowrap;
+}
+.dl-btn::before,.dl-btn::after { content:''; position:absolute; inset:0; border-radius:99px; z-index:-1; background:linear-gradient(135deg,var(--gold),var(--coral)); opacity:0; }
+.dl-btn::before { animation:dlPulse 2.2s ease-out .4s infinite }
+.dl-btn::after  { animation:dlPulse 2.2s ease-out 1.1s infinite }
+.dl-btn:hover   { translate:0 -4px; box-shadow:0 20px 48px rgba(255,107,107,.48); }
+.dl-btn:active  { scale:.97 }
+.dl-icon { width:1.9rem; height:1.9rem; border-radius:50%; background:rgba(0,0,0,.15); display:flex; align-items:center; justify-content:center; transition:translate .3s var(--ease-spring); }
+.dl-btn:hover .dl-icon { translate:0 4px }
 
-    /* ── Ambient orbs ───────────────────────── */
-    .orb {
-      position:absolute; border-radius:50%; filter:blur(80px);
-      pointer-events:none; mix-blend-mode:multiply;
-      animation:orbDrift ease-in-out infinite;
-    }
-    .dark .orb { mix-blend-mode:screen; opacity:.45; }
+/* ══════════════════════════
+   SOCIAL CARDS
+══════════════════════════ */
+.soc-card { border-radius:28px; overflow:hidden; position:relative; transition:translate .45s var(--ease-spring), box-shadow .4s; }
+.soc-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 60%); opacity:0; transition:opacity .35s; }
+.soc-card:hover::after { opacity:1; }
+.soc-card:hover { translate:0 -14px; box-shadow:0 40px 80px rgba(0,0,0,.22); }
+.soc-icon { transition:scale .4s var(--ease-spring), rotate .4s; }
+.soc-card:hover .soc-icon { scale:1.24; rotate:-8deg; }
 
-    /* ══════════════════════════════════════════
-       TICKER
-    ══════════════════════════════════════════ */
-    @keyframes tickFwd { from{translate:0 0} to{translate:-50% 0} }
-    @keyframes tickRev { from{translate:-50% 0} to{translate:0 0} }
-    .tick-track     { display:flex; width:max-content; animation:tickFwd 28s linear infinite; }
-    .tick-track-rev { display:flex; width:max-content; animation:tickRev 22s linear infinite; }
-    .tick-wrap:hover .tick-track,
-    .tick-wrap:hover .tick-track-rev { animation-play-state:paused; }
+/* ══════════════════════════
+   TILT + SHOP CARDS
+══════════════════════════ */
+.tilt { transform-style:preserve-3d; transition:transform .15s ease-out, box-shadow .3s; }
+.shop-card { border-radius:24px; overflow:hidden; transition:translate .4s var(--ease-spring), box-shadow .4s; }
+.shop-card:hover { translate:0 -10px; box-shadow:0 28px 56px rgba(255,107,107,.15); }
+.shop-img { overflow:hidden; height:220px; }
+.shop-img img { width:100%; height:100%; object-fit:cover; transition:scale .6s var(--ease-expo); }
+.shop-card:hover .shop-img img { scale:1.09; }
 
-    /* ══════════════════════════════════════════
-       ROTATING GRADIENT BORDER (Media Kit)
-    ══════════════════════════════════════════ */
-    @keyframes rotBorder { to{ --rot:360deg } }
-    .mk-ring {
-      padding:3px; border-radius:32px; position:relative;
-      background:conic-gradient(from var(--rot), var(--coral), var(--pink), var(--purple), var(--turq), var(--gold), var(--coral));
-      animation:rotBorder 6s linear infinite;
-    }
-    .mk-inner { border-radius:29px; overflow:hidden; }
+/* ══════════════════════════
+   COMING SOON CARDS
+══════════════════════════ */
+.cs-card { border-radius:24px; border:2px dashed; position:relative; overflow:hidden; transition:border-color .3s, translate .4s var(--ease-spring), box-shadow .3s; }
+.cs-card::before { content:'SOON'; position:absolute; top:14px; right:-24px; background:var(--gold); color:#1a1000; font-size:.62rem; font-weight:900; padding:4px 32px; rotate:45deg; letter-spacing:.1em; }
+.cs-card:hover { translate:0 -8px; box-shadow:0 22px 50px rgba(255,107,107,.12); }
 
-    /* ── Shimmer text ───────────────────────── */
-    @keyframes shimmer { from{background-position:-200% center} to{background-position:200% center} }
-    .shim {
-      background:linear-gradient(90deg,var(--gold) 0%,#fff 40%,var(--gold) 60%,var(--mango) 100%);
-      background-size:200% auto;
-      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-      animation:shimmer 3.5s linear infinite;
-    }
+/* ══════════════════════════
+   FORM
+══════════════════════════ */
+.f-inp { width:100%; border-radius:14px; padding:.88rem 1.1rem; font-family:'Nunito',sans-serif; font-size:.95rem; outline:none; border:2px solid rgba(255,107,107,.18); background:#fff; color:var(--text-l); transition:border-color .3s, box-shadow .3s, translate .2s; }
+.dark .f-inp { background:var(--card-d); color:var(--text-d); border-color:rgba(255,107,107,.2); }
+.f-inp:focus { border-color:var(--coral); box-shadow:0 0 0 4px rgba(255,107,107,.12); translate:0 -2px; }
 
-    /* ══════════════════════════════════════════
-       DOWNLOAD BUTTON — beautiful pulsing rings
-    ══════════════════════════════════════════ */
-    @keyframes dlPulse {
-      0%  { opacity:.6; scale:1 }
-      100%{ opacity:0;  scale:1.7 }
-    }
-    .dl-btn {
-      position:relative; display:inline-flex; align-items:center; gap:.65rem;
-      padding:1.05rem 2.4rem; border-radius:99px;
-      background:linear-gradient(135deg,var(--gold),var(--mango),var(--coral));
-      color:#1a1000; font-weight:800; font-size:1.05rem;
-      border:none; text-decoration:none; z-index:1;
-      transition:translate .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
-      box-shadow:0 8px 28px rgba(255,107,107,.35);
-      white-space:nowrap;
-    }
-    .dl-btn::before, .dl-btn::after {
-      content:''; position:absolute; inset:0; border-radius:99px; z-index:-1;
-      background:linear-gradient(135deg,var(--gold),var(--coral));
-      opacity:0;
-    }
-    .dl-btn::before { animation:dlPulse 2.2s ease-out .4s infinite }
-    .dl-btn::after  { animation:dlPulse 2.2s ease-out 1.1s infinite }
-    .dl-btn:hover   { translate:0 -4px; box-shadow:0 20px 50px rgba(255,107,107,.5); }
-    .dl-btn:active  { scale:.97 }
-    .dl-icon {
-      width:2rem; height:2rem; border-radius:50%;
-      background:rgba(0,0,0,.15); display:flex; align-items:center; justify-content:center;
-      font-size:1rem; transition:translate .3s cubic-bezier(.34,1.56,.64,1);
-    }
-    .dl-btn:hover .dl-icon { translate:0 4px }
+/* ── Progress bars ── */
+.prog-bar  { height:9px; border-radius:99px; overflow:hidden; background:rgba(0,0,0,.07); }
+.dark .prog-bar { background:rgba(255,255,255,.07); }
+.prog-fill { height:100%; border-radius:99px; scale:0 1; transform-origin:left; transition:scale 1.6s var(--ease-expo); }
+.prog-fill.go { scale:1 1; }
 
-    /* ══════════════════════════════════════════
-       SOCIAL CARDS
-    ══════════════════════════════════════════ */
-    .soc-card {
-      border-radius:28px; overflow:hidden; position:relative;
-      transition:translate .5s cubic-bezier(.34,1.56,.64,1), box-shadow .4s;
-    }
-    .soc-card::after {
-      content:''; position:absolute; inset:0;
-      background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 60%);
-      opacity:0; transition:opacity .35s;
-    }
-    .soc-card:hover::after { opacity:1; }
-    .soc-card:hover { translate:0 -14px; box-shadow:0 40px 80px rgba(0,0,0,.22); }
-    .soc-icon { transition:scale .4s cubic-bezier(.34,1.56,.64,1), rotate .4s; }
-    .soc-card:hover .soc-icon { scale:1.25; rotate:-8deg; }
+/* ── Cards & misc ── */
+.bg-card  { background:var(--card-l); } .dark .bg-card { background:var(--card-d); }
+.border-soft { border:1px solid rgba(255,107,107,.1); } .dark .border-soft { border-color:rgba(255,255,255,.07); }
+.shadow-soft { box-shadow:0 6px 28px rgba(255,107,107,.08); }
+.text-main  { color:var(--text-l); } .dark .text-main { color:var(--text-d); }
+.text-muted { color:#6b5c72; }       .dark .text-muted { color:#a395b5; }
+.bg-light   { background:var(--bg-l); } .dark .bg-light { background:var(--bg-d); }
 
-    /* ══════════════════════════════════════════
-       TILT CARDS (parallax tilt on hover)
-    ══════════════════════════════════════════ */
-    .tilt { transform-style:preserve-3d; transition:transform .15s ease-out, box-shadow .3s; }
-
-    /* ══════════════════════════════════════════
-       SHOP CARDS
-    ══════════════════════════════════════════ */
-    .shop-card {
-      border-radius:24px; overflow:hidden;
-      transition:translate .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s;
-    }
-    .shop-card:hover { translate:0 -10px; box-shadow:0 28px 56px rgba(255,107,107,.15); }
-    .shop-img { overflow:hidden; height:220px; }
-    .shop-img img { width:100%; height:100%; object-fit:cover; transition:scale .6s cubic-bezier(.16,1,.3,1); }
-    .shop-card:hover .shop-img img { scale:1.09; }
-
-    /* ══════════════════════════════════════════
-       COMING SOON CARDS
-    ══════════════════════════════════════════ */
-    .cs-card {
-      border-radius:24px; border:2px dashed; position:relative; overflow:hidden;
-      transition:border-color .3s, translate .4s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
-    }
-    .cs-card::before {
-      content:'SOON'; position:absolute; top:14px; right:-24px;
-      background:var(--gold); color:#1a1000; font-size:.62rem; font-weight:900;
-      padding:4px 32px; rotate:45deg; letter-spacing:.1em;
-    }
-    .cs-card:hover { translate:0 -8px; box-shadow:0 22px 50px rgba(255,107,107,.12); }
-
-    /* ══════════════════════════════════════════
-       FLOATING EMOJI PARTICLES (hero)
-    ══════════════════════════════════════════ */
-    @keyframes emojiFloat {
-      0%  { translate:0 0;   rotate:0deg;   opacity:.8 }
-      25% { translate:8px -30px; rotate:12deg  }
-      75% { translate:-5px -70px; rotate:-8deg }
-      100%{ translate:2px -110px; rotate:5deg; opacity:0 }
-    }
-    .e-particle { position:absolute; pointer-events:none; font-size:1.6rem; animation:emojiFloat linear infinite; }
-
-    /* ══════════════════════════════════════════
-       NAV GLASS
-    ══════════════════════════════════════════ */
-    .nav-glass {
-      backdrop-filter:blur(24px) saturate(200%);
-      background:rgba(255,250,244,.84);
-      border-bottom:1px solid rgba(255,107,107,.1);
-      transition:background .4s, padding .3s, box-shadow .3s;
-    }
-    .dark .nav-glass {
-      background:rgba(14,11,20,.88);
-      border-bottom:1px solid rgba(255,107,107,.15);
-    }
-    .nav-link {
-      position:relative; font-weight:700; font-size:.85rem; letter-spacing:.01em;
-      transition:color .25s;
-    }
-    .nav-link::after {
-      content:''; position:absolute; bottom:-2px; left:0;
-      width:0; height:2.5px; border-radius:2px;
-      background:linear-gradient(90deg,var(--coral),var(--pink));
-      transition:width .3s cubic-bezier(.34,1.56,.64,1);
-    }
-    .nav-link:hover::after { width:100%; }
-
-    /* ══════════════════════════════════════════
-       FORM
-    ══════════════════════════════════════════ */
-    .f-inp {
-      width:100%; border-radius:14px; padding:.9rem 1.1rem;
-      font-family:'Nunito',sans-serif; font-size:.95rem; outline:none;
-      border:2px solid rgba(255,107,107,.18);
-      background:#fff; color:var(--text-l);
-      transition:border-color .3s, box-shadow .3s, translate .2s;
-    }
-    .dark .f-inp { background:var(--card-d); color:var(--text-d); border-color:rgba(255,107,107,.2); }
-    .f-inp:focus { border-color:var(--coral); box-shadow:0 0 0 4px rgba(255,107,107,.13); translate:0 -2px; }
-
-    /* ══════════════════════════════════════════
-       PROGRESS BARS
-    ══════════════════════════════════════════ */
-    .prog-bar { height:9px; border-radius:99px; overflow:hidden; background:rgba(0,0,0,.07); }
-    .dark .prog-bar { background:rgba(255,255,255,.07); }
-    .prog-fill {
-      height:100%; border-radius:99px;
-      scale:0 1; transform-origin:left;
-      transition:scale 1.6s cubic-bezier(.16,1,.3,1);
-    }
-    .prog-fill.go { scale:1 1; }
-
-    /* ══════════════════════════════════════════
-       MISC UTILITIES
-    ══════════════════════════════════════════ */
-    .bg-light { background:var(--bg-l); }
-    .dark .bg-light { background:var(--bg-d); }
-    .bg-card  { background:var(--card-l); }
-    .dark .bg-card { background:var(--card-d); }
-    .border-soft { border:1px solid rgba(255,107,107,.1); }
-    .dark .border-soft { border-color:rgba(255,255,255,.07); }
-    .shadow-soft { box-shadow:0 6px 30px rgba(255,107,107,.08); }
-    .shadow-coral { box-shadow:0 16px 48px rgba(255,107,107,.22); }
-    .text-main { color:var(--text-l); }
-    .dark .text-main { color:var(--text-d); }
-    .text-muted { color:#6b5c72; }
-    .dark .text-muted { color:#a395b5; }
-  </style>
+/* ── Language toggle active state ── */
+.lang-btn-active { background:var(--coral); color:#fff; }
+</style>
 </head>
 
-<!-- ═══════════════════════════════════════════════════════
-     BODY / APP ROOT
-═══════════════════════════════════════════════════════ -->
-<body
-  :style="`
-    background:${theme==='dark'?'var(--bg-d)':'var(--bg-l)'};
-    color:${theme==='dark'?'var(--text-d)':'var(--text-l)'};
-  `"
-  x-init="
-    /* inject CSS vars from config */
-    Object.entries(C.colors).forEach(([k,v])=>{
-      document.documentElement.style.setProperty('--'+k.replace(/([A-Z])/g,'-$1').toLowerCase().replace('bg-','bg-').replace('card-','card-').replace('text-','text-'),v);
-    });
-    /* cursor */
-    const cur=document.getElementById('cur'), ring=document.getElementById('cur-ring');
-    document.addEventListener('mousemove',e=>{
-      cur.style.left=e.clientX+'px';  cur.style.top=e.clientY+'px';
-      ring.style.left=e.clientX+'px'; ring.style.top=e.clientY+'px';
-    });
-    /* tilt cards */
-    $nextTick(()=>{
-      document.querySelectorAll('.tilt').forEach(el=>{
-        el.addEventListener('mousemove',e=>{
-          const r=el.getBoundingClientRect();
-          const x=(e.clientY-r.top -r.height/2)/(r.height/2)*8;
-          const y=(e.clientX-r.left-r.width /2)/(r.width /2)*-8;
-          el.style.transform=`perspective(700px) rotateX(${x}deg) rotateY(${y}deg) translateY(-8px)`;
-        });
-        el.addEventListener('mouseleave',()=>el.style.transform='');
-      });
-    });
-  "
->
-<!-- Custom cursor -->
-<div id="cur"></div>
-<div id="cur-ring"></div>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ROOT
+═══════════════════════════════════════════════════════════ -->
+<body :style="`background:${dark?'var(--bg-d)':'var(--bg-l)'};color:${dark?'var(--text-d)':'var(--text-l)'}`"
+      x-init="boot()">
 
-<!-- ═══════════════════════════════════════════════════════
-     1. NAVIGATION
-═══════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     NAV
+═══════════════════════════════════════════════════════════ -->
 <nav class="nav-glass fixed top-0 left-0 right-0 z-50"
-     :class="scrolled ? 'py-3 shadow-md' : 'py-4'"
+     :class="scrolled?'py-3 shadow-md':'py-4'"
      @scroll.window="scrolled=window.scrollY>48">
   <div class="max-w-7xl mx-auto px-5 flex items-center justify-between">
 
-    <!-- Logo -->
-    <a href="#hero" class="flex items-center gap-2.5">
-      <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-black transition-all duration-300 hover:rotate-12"
-           style="background:linear-gradient(135deg,var(--coral),var(--pink));">🍜</div>
-      <span class="ff-fraunces font-bold text-lg text-main">Vasilisa<span class="gt-coral">.eats</span></span>
+    <!-- Logo + panda mascot -->
+    <a href="#hero" class="flex items-center gap-3 group" aria-label="Vasilisa Yummy Home">
+      <!-- Panda SVG mascot -->
+      <div class="relative w-10 h-10 flex-shrink-0">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"
+             class="w-10 h-10 drop-shadow-sm" aria-hidden="true">
+          <!-- Body -->
+          <ellipse class="panda-body" cx="32" cy="44" rx="16" ry="14" fill="white"/>
+          <!-- Belly -->
+          <ellipse cx="32" cy="46" rx="9" ry="8" fill="#E8E8E8"/>
+          <!-- Arms -->
+          <ellipse class="panda-arm" cx="16" cy="48" rx="7" ry="5" fill="#1a1a1a" transform="rotate(-20 16 48)"/>
+          <ellipse cx="48" cy="48" rx="7" ry="5" fill="#1a1a1a" transform="rotate(20 48 48)"/>
+          <!-- Head -->
+          <circle cx="32" cy="26" r="18" fill="white"/>
+          <!-- Ears -->
+          <circle cx="17" cy="13" r="7" fill="#1a1a1a"/>
+          <circle cx="47" cy="13" r="7" fill="#1a1a1a"/>
+          <circle cx="17" cy="13" r="3.5" fill="#444"/>
+          <circle cx="47" cy="13" r="3.5" fill="#444"/>
+          <!-- Eye patches -->
+          <ellipse cx="25" cy="25" rx="6" ry="5.5" fill="#1a1a1a" transform="rotate(-10 25 25)"/>
+          <ellipse cx="39" cy="25" rx="6" ry="5.5" fill="#1a1a1a" transform="rotate(10 39 25)"/>
+          <!-- Eyes -->
+          <g class="panda-eye"><circle cx="25" cy="25" r="2.5" fill="white"/><circle cx="26" cy="24" r="1.2" fill="#222"/></g>
+          <g class="panda-eye"><circle cx="39" cy="25" r="2.5" fill="white"/><circle cx="40" cy="24" r="1.2" fill="#222"/></g>
+          <!-- Blush -->
+          <ellipse cx="21" cy="31" rx="4" ry="2.5" fill="#FFB3BA" opacity=".7"/>
+          <ellipse cx="43" cy="31" rx="4" ry="2.5" fill="#FFB3BA" opacity=".7"/>
+          <!-- Nose -->
+          <ellipse cx="32" cy="30" rx="2.8" ry="2" fill="#FF6B6B"/>
+          <!-- Mouth (chewing) -->
+          <g class="panda-mouth">
+            <path d="M27 33 Q32 38 37 33" stroke="#333" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </g>
+          <!-- Chopstick -->
+          <line x1="18" y1="36" x2="10" y2="20" stroke="#C8956B" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="22" y1="38" x2="12" y2="21" stroke="#C8956B" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Steam from mouth -->
+          <path class="steam-1" d="M30 20 Q28 15 30 11" stroke="#ddd" stroke-width="2" stroke-linecap="round" fill="none" opacity=".8"/>
+          <path class="steam-2" d="M34 19 Q36 14 34 10" stroke="#ddd" stroke-width="2" stroke-linecap="round" fill="none" opacity=".7"/>
+        </svg>
+      </div>
+      <!-- Brand name -->
+      <span class="ff-fraunces font-bold text-lg text-main leading-none">
+        Vasilisa<span class="gt-coral"> Yummy</span>
+      </span>
     </a>
 
-    <!-- Desktop links -->
-    <div class="hidden lg:flex items-center gap-6">
-      <template x-for="[href,label] in [['#about','About'],['#achievements','Stats'],['#socials','Socials'],['#mediakit','Media Kit'],['#shop','Shop'],['#contact','Collab']]">
-        <a :href="href" x-text="label" class="nav-link text-muted hover:text-main"></a>
-      </template>
-    </div>
+    <!-- Desktop nav links -->
+    <nav class="hidden lg:flex items-center gap-6" aria-label="Main navigation">
+      <a href="#about"         class="nav-link text-muted hover:text-main" :x-text="T('nav_about')"></a>
+      <a href="#achievements"  class="nav-link text-muted hover:text-main" :x-text="T('nav_stats')"></a>
+      <a href="#socials"       class="nav-link text-muted hover:text-main" :x-text="T('nav_socials')"></a>
+      <a href="#mediakit"      class="nav-link text-muted hover:text-main" :x-text="T('nav_mediakit')"></a>
+      <a href="#shop"          class="nav-link text-muted hover:text-main" :x-text="T('nav_shop')"></a>
+      <a href="#contact"       class="nav-link text-muted hover:text-main" :x-text="T('nav_collab')"></a>
+    </nav>
 
     <!-- Controls -->
-    <div class="flex items-center gap-2.5">
-      <!-- Language toggle (visual only) -->
-      <div class="flex rounded-full overflow-hidden text-xs font-bold border border-coral/25">
-        <button class="px-3 py-1.5 text-white transition" style="background:var(--coral);">EN</button>
-        <button class="px-3 py-1.5 text-muted transition hover:text-main">RU</button>
+    <div class="flex items-center gap-2">
+      <!-- Language toggle -->
+      <div class="flex rounded-full overflow-hidden text-xs font-bold" style="border:1.5px solid rgba(255,107,107,.28);" role="group" aria-label="Language switcher">
+        <button @click="switchLang('en')" class="px-3 py-1.5 transition-all" :class="lang==='en'?'lang-btn-active':'text-muted hover:text-main'" aria-pressed="true">EN</button>
+        <button @click="switchLang('ru')" class="px-3 py-1.5 transition-all" :class="lang==='ru'?'lang-btn-active':'text-muted hover:text-main'" aria-pressed="false">RU</button>
       </div>
       <!-- Dark toggle -->
-      <button @click="theme=theme==='dark'?'light':'dark'"
-              class="w-9 h-9 rounded-full flex items-center justify-center text-base transition-all duration-300 hover:scale-110 border-soft bg-card">
-        <span x-text="theme==='dark'?'☀️':'🌙'"></span>
-      </button>
+      <template x-if="C.settings.enableDarkMode">
+        <button @click="dark=!dark"
+                class="w-9 h-9 rounded-full flex items-center justify-center text-base transition-all duration-300 hover:scale-110 border-soft bg-card"
+                :aria-label="dark?'Switch to light mode':'Switch to dark mode'">
+          <span x-text="dark?'☀️':'🌙'"></span>
+        </button>
+      </template>
     </div>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════════════════════════════
-     2. HERO
-═══════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════ -->
 <section id="hero" class="relative min-h-screen flex items-center overflow-hidden pt-20"
-         :style="theme==='dark' ? 'background:var(--bg-d)' : 'background:linear-gradient(165deg,#FFFAF4 0%,#FFF0E8 55%,rgba(255,78,156,.07) 100%)'">
+         :style="dark?'background:var(--bg-d)':'background:linear-gradient(165deg,#FFFAF4 0%,#FFF0E8 55%,rgba(255,78,156,.07) 100%)'">
 
   <!-- Ambient orbs -->
-  <div class="orb" style="width:480px;height:480px;background:radial-gradient(circle,rgba(255,107,107,.38),transparent 70%);top:-120px;right:-80px;animation-duration:14s;"></div>
-  <div class="orb" style="width:360px;height:360px;background:radial-gradient(circle,rgba(255,78,156,.32),transparent 70%);bottom:-80px;left:-60px;animation-duration:11s;animation-delay:3s;"></div>
-  <div class="orb" style="width:220px;height:220px;background:radial-gradient(circle,rgba(255,212,59,.42),transparent 70%);top:42%;left:42%;animation-duration:9s;animation-delay:1.5s;"></div>
+  <div class="orb" style="width:480px;height:480px;background:radial-gradient(circle,rgba(255,107,107,.38),transparent 70%);top:-120px;right:-80px;animation-duration:14s;" aria-hidden="true"></div>
+  <div class="orb" style="width:360px;height:360px;background:radial-gradient(circle,rgba(255,78,156,.32),transparent 70%);bottom:-80px;left:-60px;animation-duration:11s;animation-delay:3s;" aria-hidden="true"></div>
+  <div class="orb" style="width:220px;height:220px;background:radial-gradient(circle,rgba(255,212,59,.42),transparent 70%);top:42%;left:42%;animation-duration:9s;animation-delay:1.5s;" aria-hidden="true"></div>
 
   <!-- Floating emoji particles -->
-  <template x-for="(em,i) in C.hero.floatingEmoji" :key="i">
-    <div class="e-particle"
-         :style="`left:${[6,88,15,80,5,91][i]}%;top:${[18,22,72,68,44,55][i]}%;animation-duration:${[6,8,9,7,10,7.5][i]}s;animation-delay:${[0,1.5,3,0.8,4.5,2][i]}s;`"
+  <template x-for="(em,i) in ['🍜','🌴','⭐','🍣','🥭','🔥']">
+    <div class="e-particle" aria-hidden="true"
+         :style="`left:${[6,88,15,80,5,91][i]}%;top:${[18,22,72,68,44,55][i]}%;animation-duration:${5+i*1.2}s;animation-delay:${i*.7}s;`"
          x-text="em"></div>
   </template>
 
   <div class="max-w-7xl mx-auto px-6 py-24 w-full">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-      <!-- ── Text ── -->
+      <!-- TEXT -->
       <div class="order-2 lg:order-1">
-        <!-- Badge -->
         <div class="h-in1 mb-5">
           <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold"
-                style="background:linear-gradient(135deg,rgba(0,212,200,.15),rgba(155,77,255,.12));color:var(--turq);border:1.5px solid rgba(0,212,200,.25);">
-            🌴 Phuket, Thailand
-          </span>
+                style="background:linear-gradient(135deg,rgba(0,212,200,.15),rgba(155,77,255,.12));color:var(--turq);border:1.5px solid rgba(0,212,200,.25);"
+                x-text="T('hero_badge')"></span>
         </div>
 
-        <!-- Headline -->
+        <!-- H1 — most important SEO heading -->
         <h1 class="ff-fraunces font-black leading-[1.04] mb-3 h-in2 text-main"
-            style="font-size:clamp(2.6rem,5.5vw,5rem);">
-          The World's Most<br><span class="gt-trio">Honest</span><br>Food Critic
-        </h1>
+            style="font-size:clamp(2.4rem,5.5vw,5rem);"
+            x-text="T('hero_h1')"></h1>
 
-        <!-- Accent line -->
-        <p class="ff-caveat h-in3 mb-5" style="font-size:2.1rem;color:var(--coral);">is 8 years old.</p>
+        <p class="ff-caveat h-in3 mb-5" style="font-size:2.1rem;color:var(--coral);"
+           x-text="T('hero_accent')"></p>
 
-        <!-- Sub -->
-        <p class="h-in4 text-lg leading-relaxed mb-10 max-w-md text-muted">
-          <span x-text="C.hero.sub"></span>
-        </p>
+        <p class="h-in4 text-lg leading-relaxed mb-10 max-w-md text-muted"
+           x-text="T('hero_sub')"></p>
 
-        <!-- CTA Buttons -->
         <div class="h-in5 flex flex-wrap gap-4">
-          <a :href="C.hero.ctaWork.href"
+          <a href="#contact"
              class="flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-white text-base transition-all duration-300 hover:scale-105 hover:-translate-y-1"
              style="background:linear-gradient(135deg,var(--coral),var(--pink));box-shadow:0 10px 36px rgba(255,107,107,.38);"
-             x-text="C.hero.ctaWork.label">
-          </a>
-          <a :href="C.hero.ctaKit.href"
-             class="flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-base border-2 transition-all duration-300 hover:scale-105 hover:-translate-y-1 border-soft text-main hover:bg-white/60 dark:hover:bg-white/10"
-             x-text="C.hero.ctaKit.label">
-          </a>
+             x-text="T('hero_cta1')"></a>
+          <a href="#mediakit"
+             class="flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-base border-2 transition-all duration-300 hover:scale-105 hover:-translate-y-1 border-soft text-main"
+             x-text="T('hero_cta2')"></a>
         </div>
 
         <!-- Quick stats -->
         <div class="h-in5 flex gap-8 mt-12 flex-wrap">
-          <template x-for="s in C.hero.stats" :key="s.label">
-            <div>
-              <div class="ff-fraunces font-black text-3xl gt-coral" x-text="s.val"></div>
-              <div class="text-xs font-semibold mt-0.5 text-muted" x-text="s.label"></div>
-            </div>
-          </template>
+          <div>
+            <div class="ff-fraunces font-black text-3xl gt-coral">47K+</div>
+            <div class="text-xs font-semibold mt-0.5 text-muted" x-text="T('hero_stat_followers')"></div>
+          </div>
+          <div class="w-px" :class="dark?'bg-white/10':'bg-black/10'"></div>
+          <div>
+            <div class="ff-fraunces font-black text-3xl gt-coral">200+</div>
+            <div class="text-xs font-semibold mt-0.5 text-muted" x-text="T('hero_stat_restaurants')"></div>
+          </div>
+          <div class="w-px" :class="dark?'bg-white/10':'bg-black/10'"></div>
+          <div>
+            <div class="ff-fraunces font-black text-3xl gt-coral">8.4%</div>
+            <div class="text-xs font-semibold mt-0.5 text-muted" x-text="T('hero_stat_engagement')"></div>
+          </div>
         </div>
       </div>
 
-      <!-- ── Photo ── -->
+      <!-- HERO IMAGE -->
       <div class="order-1 lg:order-2 relative flex justify-center">
         <!-- Spinning halo -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div class="rounded-full opacity-35"
-               style="width:440px;height:440px;background:conic-gradient(from 0deg,var(--coral),var(--pink),var(--purple),var(--turq),var(--gold),var(--coral));filter:blur(4px);animation:rotBorder 9s linear infinite;"></div>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+          <div class="rounded-full opacity-30"
+               style="width:440px;height:440px;background:conic-gradient(from 0deg,var(--coral),var(--pink),var(--purple),var(--turq),var(--gold),var(--coral));filter:blur(5px);animation:rotBorder 9s linear infinite;"></div>
         </div>
 
-        <!-- Photo itself -->
         <div class="relative z-10 hero-img">
-          <!-- Trophy badge -->
+          <!-- TOP CRITIC badge -->
           <div class="badge-pop absolute -top-5 -right-5 z-20 flex flex-col items-center justify-center"
-               style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--mango));box-shadow:0 10px 30px rgba(255,149,0,.5);">
-            <span class="text-2xl leading-none">⭐</span>
-            <span class="ff-fraunces font-black text-center leading-tight" style="font-size:.6rem;color:#1a1000;">TOP<br>CRITIC</span>
+               style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--mango));box-shadow:0 10px 28px rgba(255,149,0,.5);"
+               aria-label="Top Critic Award">
+            <span class="text-2xl leading-none" aria-hidden="true">⭐</span>
+            <span class="ff-fraunces font-black text-center leading-tight" style="font-size:.58rem;color:#1a1000;">TOP<br>CRITIC</span>
           </div>
 
-          <img :src="C.hero.photo" alt="Vasilisa Chugunova"
-               style="width:430px;max-width:100%;height:530px;object-fit:cover;object-position:top;
-                      border-radius:48% 52% 60% 40%/45% 42% 58% 55%;
-                      border:5px solid rgba(255,255,255,.9);
-                      box-shadow:0 50px 100px rgba(255,107,107,.2);" />
+          <img :src="C.images.hero"
+               alt="Vasilisa Chugunova — Phuket's youngest food critic and mukbang creator"
+               loading="eager"
+               width="430" height="530"
+               style="width:430px;max-width:100%;height:530px;object-fit:cover;object-position:top;border-radius:48% 52% 60% 40%/45% 42% 58% 55%;border:5px solid rgba(255,255,255,.9);box-shadow:0 50px 100px rgba(255,107,107,.2);" />
 
           <!-- Floating chips -->
           <div class="absolute -bottom-4 -left-7 z-20 flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-card border-soft shadow-soft"
-               style="animation:imgFloat 6s ease-in-out 1s infinite;">
-            <span style="font-size:1.7rem;">🍜</span>
+               style="animation:imgFloat 6s ease-in-out 1s infinite;" aria-hidden="true">
+            <span class="text-xl">🍜</span>
             <div>
               <div class="ff-fraunces font-black text-sm text-main">Phuket</div>
               <div class="text-xs text-muted">Based here</div>
             </div>
           </div>
           <div class="absolute top-1/3 -left-10 z-20 px-3 py-2 rounded-xl text-sm font-bold text-white"
-               style="background:linear-gradient(135deg,var(--pink),var(--purple));box-shadow:0 8px 24px rgba(155,77,255,.4);animation:imgFloat 8s ease-in-out 2s infinite;">
+               style="background:linear-gradient(135deg,var(--pink),var(--purple));box-shadow:0 8px 24px rgba(155,77,255,.4);animation:imgFloat 8s ease-in-out 2s infinite;" aria-hidden="true">
             🎬 300+ Videos
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- Bottom scroll cue -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-40" style="animation:imgFloat 2.5s ease-in-out infinite;">
+  <!-- Scroll cue -->
+  <div class="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 opacity-40" style="animation:imgFloat 2.5s ease-in-out infinite;" aria-hidden="true">
     <span class="text-xs font-semibold text-muted tracking-widest uppercase">Scroll</span>
     <svg width="18" height="22" viewBox="0 0 18 22" fill="none"><path d="M9 1v14M3 13l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
 
-  <!-- Ticker stripe at bottom -->
+  <!-- Ticker stripe -->
   <div class="tick-wrap absolute bottom-0 left-0 right-0 overflow-hidden py-3.5"
-       style="background:linear-gradient(90deg,var(--coral),var(--pink),var(--purple));">
+       style="background:linear-gradient(90deg,var(--coral),var(--pink),var(--purple));" aria-hidden="true">
     <div class="tick-track">
       <template x-for="j in 2">
         <div class="flex items-center">
-          <template x-for="item in C.ticker">
+          <template x-for="item in T('ticker1')">
             <span class="flex items-center gap-2 text-white text-sm font-bold whitespace-nowrap" style="padding:0 2.2rem;">
               <span x-text="item.icon"></span>
               <span x-text="item.text"></span>
@@ -747,53 +968,60 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     3. ABOUT
-═══════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     ABOUT
+═══════════════════════════════════════════════════════════ -->
 <section id="about" class="py-32 overflow-hidden"
-         :style="theme==='dark'?'background:var(--bg-d)':'background:#FFFAF4'">
+         :style="dark?'background:var(--bg-d)':'background:#FFFAF4'">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
 
       <!-- Photo collage -->
       <div class="rv-left relative h-[540px]">
-        <img :src="C.about.photos[0]" alt="Thai food"
-             style="position:absolute;top:0;left:0;width:268px;height:350px;object-fit:cover;border-radius:28px;border:4px solid white;box-shadow:0 28px 60px rgba(255,107,107,.18);" />
-        <img :src="C.about.photos[1]" alt="Restaurant"
-             style="position:absolute;bottom:0;right:0;width:248px;height:316px;object-fit:cover;border-radius:28px;border:4px solid white;box-shadow:0 28px 60px rgba(0,0,0,.14);" />
+        <img :src="C.images.about1"
+             alt="Vasilisa Chugunova tasting authentic Thai food at a Phuket restaurant"
+             loading="lazy" width="268" height="350"
+             style="position:absolute;top:0;left:0;width:268px;height:350px;object-fit:cover;border-radius:28px;border:4px solid white;box-shadow:0 28px 60px rgba(255,107,107,.18);"/>
+        <img :src="C.images.about2"
+             alt="Interior of a Phuket restaurant reviewed by Vasilisa"
+             loading="lazy" width="248" height="316"
+             style="position:absolute;bottom:0;right:0;width:248px;height:316px;object-fit:cover;border-radius:28px;border:4px solid white;box-shadow:0 28px 60px rgba(0,0,0,.14);"/>
         <!-- Quote bubble -->
         <div class="absolute z-10 max-w-[196px] p-4 rounded-2xl"
              style="bottom:130px;left:200px;background:linear-gradient(135deg,var(--coral),var(--pink));color:white;box-shadow:0 16px 44px rgba(255,107,107,.4);">
-          <p class="ff-caveat text-base leading-snug" x-text="C.about.quote"></p>
-          <p class="text-xs mt-1 opacity-75" x-text="C.about.quoteBy"></p>
+          <p class="ff-caveat text-base leading-snug" x-text="T('about_quote')"></p>
+          <p class="text-xs mt-1 opacity-75" x-text="T('about_quoteBy')"></p>
         </div>
-        <!-- Flag chip -->
-        <div class="absolute top-5 right-7 z-10 px-3 py-1.5 rounded-xl text-sm font-bold bg-card border-soft shadow-soft text-main">🇹🇭 Phuket-based</div>
+        <div class="absolute top-5 right-7 z-10 px-3 py-1.5 rounded-xl text-sm font-bold bg-card border-soft shadow-soft text-main"
+             x-text="T('about_flag')"></div>
       </div>
 
       <!-- Content -->
       <div class="rv-right">
-        <div class="s-pill mb-5" x-text="C.about.sectionLabel"></div>
+        <div class="s-pill mb-5" x-text="T('about_pill')"></div>
 
-        <h2 class="ff-fraunces font-black leading-[1.1] mb-6 text-main"
-            style="font-size:clamp(2rem,4vw,3.2rem);">
-          <template x-for="(line,i) in C.about.headline" :key="i">
-            <span :class="i===2?'gt-trio':''" class="block" x-text="line"></span>
-          </template>
+        <h2 class="ff-fraunces font-black leading-[1.1] mb-6 text-main" style="font-size:clamp(2rem,4vw,3.2rem);">
+          <span class="block" x-text="T('about_h2a')"></span>
+          <span class="block" x-text="T('about_h2b')"></span>
+          <span class="block gt-trio" x-text="T('about_h2c')"></span>
         </h2>
 
-        <template x-for="para in C.about.body">
-          <p class="text-lg leading-relaxed mb-4 text-muted" x-text="para"></p>
-        </template>
+        <p class="text-lg leading-relaxed mb-4 text-muted" x-text="T('about_p1')"></p>
+        <p class="text-lg leading-relaxed mb-6 text-muted" x-text="T('about_p2')"></p>
 
-        <!-- Facts grid -->
+        <!-- Fact cards -->
         <div class="grid grid-cols-2 gap-4 mt-6 stg">
-          <template x-for="fact in C.about.facts">
+          <template x-for="[label_k, val_k, icon] in [
+            ['fact_location_label','fact_location_val','🌊'],
+            ['fact_age_label','fact_age_val','🎂'],
+            ['fact_rest_label','fact_rest_val','🍜'],
+            ['fact_vid_label','fact_vid_val','🎬']
+          ]">
             <div class="rv-up flex items-center gap-3 p-4 rounded-2xl tilt bg-card border-soft shadow-soft">
-              <span class="text-2xl" x-text="fact.icon"></span>
+              <span class="text-2xl" x-text="icon"></span>
               <div>
-                <div class="font-bold text-sm text-main" x-text="fact.value"></div>
-                <div class="text-xs text-muted" x-text="fact.label"></div>
+                <div class="font-bold text-sm text-main" x-text="T(val_k)"></div>
+                <div class="text-xs text-muted" x-text="T(label_k)"></div>
               </div>
             </div>
           </template>
@@ -801,84 +1029,77 @@
 
         <!-- Skill bars -->
         <div class="mt-8 space-y-4">
-          <template x-for="sk in C.about.skills">
+          <template x-for="[key, pct, color] in [['skill1',98,'coral'],['skill2',92,'pink'],['skill3',87,'turq']]">
             <div>
               <div class="flex justify-between mb-1.5">
-                <span class="text-sm font-bold text-main" x-text="sk.label"></span>
-                <span class="text-sm text-muted" x-text="sk.pct+'%'"></span>
+                <span class="text-sm font-bold text-main" x-text="T(key)"></span>
+                <span class="text-sm text-muted" x-text="pct+'%'"></span>
               </div>
               <div class="prog-bar">
                 <div class="prog-fill rounded-full"
-                     :style="`background:var(--${sk.color});`"
-                     x-data="{pct: sk.pct}"
-                     x-intersect.once="$nextTick(()=>{$el.classList.add('go');$el.style.scale=`${pct/100} 1`})">
-                </div>
+                     :style="`background:var(--${color});`"
+                     x-data="{p:pct}"
+                     x-intersect.once="$nextTick(()=>{$el.classList.add('go');$el.style.scale=`${p/100} 1`})"></div>
               </div>
             </div>
           </template>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     4. ACHIEVEMENTS
-═══════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     ACHIEVEMENTS
+═══════════════════════════════════════════════════════════ -->
 <section id="achievements" class="py-28 overflow-hidden relative"
-         :style="theme==='dark'?'background:#111015':'background:linear-gradient(135deg,#FFFAF4,rgba(255,78,156,.05))'">
+         :style="dark?'background:#111015':'background:linear-gradient(135deg,#FFFAF4,rgba(255,78,156,.05))'">
 
-  <!-- Big ghost number background -->
-  <div class="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none">
-    <span class="ff-fraunces font-black text-main" style="font-size:38vw;opacity:.025;line-height:1;">47K</span>
+  <div class="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none" aria-hidden="true">
+    <span class="ff-fraunces font-black text-main" style="font-size:38vw;opacity:.024;line-height:1;">47K</span>
   </div>
 
   <div class="max-w-7xl mx-auto px-6 relative z-10">
     <div class="text-center mb-16 rv-up">
-      <div class="s-pill mb-4 mx-auto w-fit">📊 By The Numbers</div>
+      <div class="s-pill mb-4 mx-auto w-fit" x-text="T('ach_pill')"></div>
       <h2 class="ff-fraunces font-black text-main" style="font-size:clamp(2rem,5vw,3.8rem);">
-        Stats That <span class="gt-warm">Don't Lie</span>
+        <span x-text="T('ach_h2a')"></span><span class="gt-warm" x-text="T('ach_h2b')"></span>
       </h2>
     </div>
 
-    <!-- Stats cards -->
+    <!-- Animated stat cards -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-20 stg">
       <template x-for="stat in C.stats">
         <div class="rv-scale tilt text-center p-6 rounded-2xl bg-card border-soft shadow-soft">
-          <div class="text-3xl mb-2" x-text="stat.icon"></div>
+          <div class="text-3xl mb-2" x-text="stat.icon" aria-hidden="true"></div>
           <div class="ff-fraunces font-black text-2xl gt-coral mb-1"
-               x-data="ctrComp(stat.val)"
-               x-intersect.once="startCtr()"
+               x-data="ctr(stat.val)"
+               x-intersect.once="go()"
                x-text="display"></div>
-          <div class="text-xs font-semibold text-muted" x-text="stat.label"></div>
+          <div class="text-xs font-semibold text-muted" x-text="lang==='ru'?stat.ru:stat.en"></div>
         </div>
       </template>
     </div>
 
-    <!-- Awards -->
+    <!-- Award cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20 stg">
-      <template x-for="aw in [
-        {icon:'🏆',title:'Best Young Creator',sub:'Phuket Food Awards 2024'},
-        {icon:'📺',title:'Featured on Thai TV',sub:'Good Morning Thailand, Channel 3'},
-        {icon:'📰',title:'Press Coverage',sub:'Bangkok Post · Phuket Magazine · TAT'}
-      ]">
+      <template x-for="[icon, tk, sk] in [['🏆','aw1_title','aw1_sub'],['📺','aw2_title','aw2_sub'],['📰','aw3_title','aw3_sub']]">
         <div class="rv-up p-6 rounded-2xl tilt bg-card border-soft shadow-soft">
-          <div class="text-4xl mb-3" x-text="aw.icon"></div>
-          <h3 class="ff-fraunces font-bold text-xl mb-1 text-main" x-text="aw.title"></h3>
-          <p class="text-sm text-muted" x-text="aw.sub"></p>
+          <div class="text-4xl mb-3" x-text="icon" aria-hidden="true"></div>
+          <h3 class="ff-fraunces font-bold text-xl mb-1 text-main" x-text="T(tk)"></h3>
+          <p class="text-sm text-muted" x-text="T(sk)"></p>
         </div>
       </template>
     </div>
   </div>
 
-  <!-- ── TICKER STRIPE 1 ── -->
-  <div class="tick-wrap overflow-hidden py-1 my-2" style="rotate:-1.5deg;margin:-8px 0;">
+  <!-- Ticker 1 (gold, angled) -->
+  <div class="tick-wrap overflow-hidden py-1 my-2" style="rotate:-1.5deg;margin:-8px 0;" aria-hidden="true">
     <div class="py-4" style="background:linear-gradient(90deg,var(--gold),var(--mango),var(--coral));">
       <div class="tick-track">
         <template x-for="j in 2">
           <div class="flex items-center">
-            <template x-for="item in C.ticker">
+            <template x-for="item in T('ticker1')">
               <span class="flex items-center gap-3 text-gray-900 text-sm font-black whitespace-nowrap uppercase tracking-wider" style="padding:0 2.2rem;">
                 <span class="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs" style="background:rgba(0,0,0,.15);" x-text="item.icon"></span>
                 <span x-text="item.text"></span>
@@ -891,22 +1112,13 @@
     </div>
   </div>
 
-  <!-- ── TICKER STRIPE 2 (reverse) ── -->
-  <div class="tick-wrap overflow-hidden py-1 my-2" style="rotate:1.5deg;margin:-8px 0;">
+  <!-- Ticker 2 (pink, reverse) -->
+  <div class="tick-wrap overflow-hidden py-1 my-2" style="rotate:1.5deg;margin:-8px 0;" aria-hidden="true">
     <div class="py-3.5" style="background:linear-gradient(90deg,var(--pink),var(--purple),var(--pink));">
       <div class="tick-track-rev">
         <template x-for="j in 2">
           <div class="flex items-center">
-            <template x-for="item in [
-              {icon:'🌴',text:'Phuket Based'},
-              {icon:'🍜',text:'Authentic Reviews'},
-              {icon:'🎬',text:'Video Content'},
-              {icon:'🤝',text:'Brand Partnerships'},
-              {icon:'🇹🇭',text:'Thailand & SEA Focus'},
-              {icon:'💯',text:'100% Honest'},
-              {icon:'📱',text:'Multi-Platform'},
-              {icon:'⭐',text:'Top-Rated Creator'}
-            ]">
+            <template x-for="item in T('ticker2')">
               <span class="flex items-center gap-2 text-white text-sm font-bold whitespace-nowrap uppercase tracking-widest" style="padding:0 1.8rem;">
                 <span x-text="item.icon"></span>
                 <span x-text="item.text"></span>
@@ -920,34 +1132,36 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     5. SOCIAL MEDIA
-═══════════════════════════════════════════════════════ -->
-<section id="socials" class="py-32 overflow-hidden"
-         :style="theme==='dark'?'background:var(--bg-d)':'background:#FFFAF4'">
+<!-- ═══════════════════════════════════════════════════════════
+     SOCIAL MEDIA
+═══════════════════════════════════════════════════════════ -->
+<section id="socials" class="py-32 overflow-hidden" :style="dark?'background:var(--bg-d)':'background:#FFFAF4'">
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center mb-16 rv-up">
-      <div class="s-pill mb-4 mx-auto w-fit">📱 Find Us Online</div>
+      <div class="s-pill mb-4 mx-auto w-fit" x-text="T('soc_pill')"></div>
       <h2 class="ff-fraunces font-black text-main" style="font-size:clamp(2rem,5vw,3.8rem);">
-        Join <span class="gt-trio">47K+</span> Followers
+        <span x-text="T('soc_h2a')"></span><span class="gt-trio" x-text="T('soc_h2b')"></span><span x-text="T('soc_h2c')"></span>
       </h2>
-      <p class="mt-3 text-lg text-muted max-w-lg mx-auto">Across platforms — from full mukbangs to quick bites</p>
+      <p class="mt-3 text-lg text-muted max-w-lg mx-auto" x-text="T('soc_sub')"></p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stg">
       <template x-for="s in C.socials">
-        <a :href="s.url" target="_blank" rel="noopener" class="soc-card rv-up block" :style="`background:${s.bgGrad};min-height:300px;`">
+        <a :href="C.socialLinks[s.urlKey]" target="_blank" rel="noopener noreferrer"
+           class="soc-card rv-up block"
+           :style="`background:${s.bgGrad};min-height:300px;`"
+           :aria-label="`Visit Vasilisa on ${s.name}`">
           <div class="p-7 h-full flex flex-col justify-between text-white relative z-10">
             <div>
-              <div class="soc-icon mb-5" x-html="s.iconSvg"></div>
+              <div class="soc-icon mb-5" x-html="s.icon" aria-hidden="true"></div>
               <div class="ff-fraunces font-black text-4xl mb-1" x-text="s.followers"></div>
               <div class="font-bold text-lg mb-1" x-text="s.name"></div>
               <div class="text-sm opacity-70 mb-4" x-text="s.handle"></div>
-              <div class="text-sm opacity-85 leading-relaxed" x-text="s.desc"></div>
+              <div class="text-sm opacity-85 leading-relaxed" x-text="lang==='ru'?s.ru:s.en"></div>
             </div>
             <div class="flex items-center gap-2 text-sm font-bold opacity-75 mt-4">
-              <span>Follow</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+              <span x-text="T('soc_follow')"></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </div>
           </div>
         </a>
@@ -956,25 +1170,30 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     6. COLLABORATIONS
-═══════════════════════════════════════════════════════ -->
-<section id="collaborations" class="py-24"
-         :style="theme==='dark'?'background:#111015':'background:white'">
+<!-- ═══════════════════════════════════════════════════════════
+     COLLABORATIONS
+═══════════════════════════════════════════════════════════ -->
+<section id="collaborations" class="py-24" :style="dark?'background:#111015':'background:white'">
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center mb-14 rv-up">
-      <div class="s-pill mb-4 mx-auto w-fit">🤝 Partners</div>
+      <div class="s-pill mb-4 mx-auto w-fit" x-text="T('col_pill')"></div>
       <h2 class="ff-fraunces font-black text-main" style="font-size:clamp(1.8rem,4vw,3rem);">
-        Brands That <span class="gt-warm">Trusted Her</span>
+        <span x-text="T('col_h2a')"></span><span class="gt-warm" x-text="T('col_h2b')"></span>
       </h2>
     </div>
-
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 stg">
       <template x-for="c in C.collabs">
         <div class="rv-up tilt p-5 rounded-2xl text-center bg-card border-soft shadow-soft">
-          <div class="text-3xl mb-2" x-text="c.icon"></div>
+          <template x-if="c.logoUrl">
+            <img :src="c.logoUrl" :alt="c.name+' logo'" loading="lazy" class="w-12 h-12 object-contain mx-auto mb-2 rounded-lg"/>
+          </template>
+          <template x-if="!c.logoUrl">
+            <div class="text-3xl mb-2" x-text="c.icon" aria-hidden="true"></div>
+          </template>
           <div class="font-bold text-sm text-main" x-text="c.name"></div>
-          <div class="text-xs mt-1 px-2 py-0.5 rounded-full inline-block" style="background:rgba(255,107,107,.1);color:var(--coral);" x-text="c.cat"></div>
+          <div class="text-xs mt-1 px-2 py-0.5 rounded-full inline-block"
+               style="background:rgba(255,107,107,.1);color:var(--coral);"
+               x-text="lang==='ru'?c.ru:c.en"></div>
           <div class="text-xs mt-1 text-muted" x-text="c.year"></div>
         </div>
       </template>
@@ -982,58 +1201,57 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     7. MEDIA KIT  ← KEY BLOCK
-═══════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     MEDIA KIT
+═══════════════════════════════════════════════════════════ -->
 <section id="mediakit" class="py-32 overflow-hidden"
-         :style="theme==='dark'?'background:var(--bg-d)':'background:linear-gradient(135deg,#FFFAF4,rgba(155,77,255,.05))'">
+         :style="dark?'background:var(--bg-d)':'background:linear-gradient(135deg,#FFFAF4,rgba(155,77,255,.05))'">
   <div class="max-w-6xl mx-auto px-6">
 
     <div class="text-center mb-14 rv-up">
-      <div class="s-pill mb-4 mx-auto w-fit" x-text="C.mediakit.sectionLabel"></div>
+      <div class="s-pill mb-4 mx-auto w-fit" x-text="T('mk_pill')"></div>
       <h2 class="ff-fraunces font-black text-main" style="font-size:clamp(2rem,5vw,3.8rem);">
-        Media <span class="gt-trio">Kit</span> 2025
+        <span x-text="T('mk_h2a')"></span><span class="gt-trio" x-text="T('mk_h2b')"></span><span x-text="T('mk_h2c')"></span>
       </h2>
     </div>
 
-    <!-- Rotating gradient border card -->
     <div class="mk-ring rv-scale">
-      <div class="mk-inner" :style="theme==='dark'?'background:#0E0B14':'background:linear-gradient(135deg,#18101a,#2a1535)'">
+      <div class="mk-inner" :style="dark?'background:#0E0B14':'background:linear-gradient(135deg,#18101a,#2a1535)'">
         <div class="p-10 md:p-16 relative overflow-hidden">
-
-          <!-- BG decoration orbs -->
-          <div style="position:absolute;top:-40px;right:-40px;width:360px;height:360px;background:radial-gradient(circle,rgba(255,107,107,.12),transparent 70%);pointer-events:none;"></div>
-          <div style="position:absolute;bottom:-60px;left:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(155,77,255,.12),transparent 70%);pointer-events:none;"></div>
-          <div class="absolute top-5 right-8 text-8xl opacity-[.04] pointer-events-none select-none ff-fraunces font-black text-white">MK</div>
+          <div style="position:absolute;top:-40px;right:-40px;width:360px;height:360px;background:radial-gradient(circle,rgba(255,107,107,.12),transparent 70%);pointer-events:none;" aria-hidden="true"></div>
+          <div style="position:absolute;bottom:-60px;left:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(155,77,255,.12),transparent 70%);pointer-events:none;" aria-hidden="true"></div>
+          <div class="absolute top-5 right-8 text-8xl opacity-[.04] pointer-events-none select-none ff-fraunces font-black text-white" aria-hidden="true">MK</div>
 
           <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
-
-            <!-- Left col -->
             <div>
-              <p class="text-sm font-bold mb-3 tracking-widest uppercase" style="color:rgba(255,255,255,.35);">Official Brand Document</p>
-              <h3 class="shim ff-fraunces font-black mb-5" style="font-size:clamp(2.2rem,4.5vw,3.6rem);">Vasilisa's<br>Media Kit</h3>
-              <p class="text-lg leading-relaxed mb-6" style="color:rgba(255,255,255,.7);" x-text="C.mediakit.sub"></p>
+              <p class="text-sm font-bold mb-3 tracking-widest uppercase" style="color:rgba(255,255,255,.35);" x-text="T('mk_official')"></p>
+              <h3 class="shim ff-fraunces font-black mb-5" style="font-size:clamp(2.2rem,4.5vw,3.6rem);"
+                  x-html="T('mk_title').replace('\n','<br>')"></h3>
+              <p class="text-lg leading-relaxed mb-6" style="color:rgba(255,255,255,.7);" x-text="T('mk_sub')"></p>
 
               <!-- Format tags -->
-              <div class="flex flex-wrap gap-2.5 mb-10">
-                <template x-for="fmt in C.mediakit.formats">
-                  <span class="px-4 py-1.5 rounded-full text-sm font-bold" style="background:rgba(255,212,59,.12);color:var(--gold);border:1px solid rgba(255,212,59,.28);" x-text="fmt"></span>
+              <div class="flex flex-wrap gap-2.5 mb-8">
+                <p class="w-full text-xs font-bold mb-1 tracking-wider uppercase" style="color:rgba(255,255,255,.4);" x-text="T('mk_formats_label')"></p>
+                <template x-for="fmt in (lang==='ru'?C.mediakit.formats_ru:C.mediakit.formats_en)">
+                  <span class="px-4 py-1.5 rounded-full text-sm font-bold"
+                        style="background:rgba(255,212,59,.12);color:var(--gold);border:1px solid rgba(255,212,59,.28);"
+                        x-text="fmt"></span>
                 </template>
               </div>
 
-              <!-- ✨ DOWNLOAD BUTTON ✨ -->
-              <a :href="C.mediakit.downloadUrl" class="dl-btn" download>
-                <span class="dl-icon">⬇</span>
-                <span x-text="C.mediakit.downloadLabel"></span>
-              </a>
+              <!-- Download button — generates PDF via jsPDF -->
+              <button @click="generatePDF()" class="dl-btn" :aria-label="T('mk_dl')">
+                <span class="dl-icon" aria-hidden="true">⬇</span>
+                <span x-text="T('mk_dl')"></span>
+              </button>
 
-              <p class="mt-5 text-xs" style="color:rgba(255,255,255,.3);" x-text="C.mediakit.audience"></p>
+              <p class="mt-5 text-xs" style="color:rgba(255,255,255,.3);" x-text="T('mk_audience')"></p>
             </div>
 
-            <!-- Right col: stats + audience chart -->
+            <!-- Stats + audience chart -->
             <div class="space-y-4">
               <div class="grid grid-cols-2 gap-4">
-                <template x-for="s in C.mediakit.stats">
+                <template x-for="s in (lang==='ru'?C.mediakit.stats_ru:C.mediakit.stats_en)">
                   <div class="tilt text-center p-5 rounded-2xl" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);">
                     <div class="shim ff-fraunces font-black text-3xl mb-1" x-text="s.val"></div>
                     <div class="text-sm" style="color:rgba(255,255,255,.5);" x-text="s.label"></div>
@@ -1041,17 +1259,17 @@
                 </template>
               </div>
 
-              <!-- Audience bar chart -->
               <div class="p-5 rounded-2xl" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);">
-                <div class="text-xs font-bold mb-4 tracking-widest uppercase" style="color:rgba(255,255,255,.35);">Audience Split</div>
-                <template x-for="seg in C.mediakit.audienceSplit">
+                <div class="text-xs font-bold mb-4 tracking-widest uppercase" style="color:rgba(255,255,255,.35);" x-text="T('mk_aud_title')"></div>
+                <template x-for="seg in C.mediakit.audience">
                   <div class="mb-3">
                     <div class="flex justify-between mb-1">
                       <span class="text-xs font-semibold text-white" x-text="seg.label"></span>
                       <span class="text-xs" style="color:rgba(255,255,255,.4);" x-text="seg.pct+'%'"></span>
                     </div>
                     <div class="prog-bar" style="background:rgba(255,255,255,.08);">
-                      <div class="prog-fill" :style="`background:var(--${seg.color});`"
+                      <div class="prog-fill rounded-full"
+                           :style="`background:rgb(${seg.color.join(',')});`"
                            x-data="{p:seg.pct}"
                            x-intersect.once="$nextTick(()=>{$el.classList.add('go');$el.style.scale=`${p/100} 1`})"></div>
                     </div>
@@ -1059,159 +1277,176 @@
                 </template>
               </div>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     8. WORK WITH US + FORM
-═══════════════════════════════════════════════════════ -->
-<section id="contact" class="py-32 overflow-hidden"
-         :style="theme==='dark'?'background:#111015':'background:white'">
+<!-- ═══════════════════════════════════════════════════════════
+     CONTACT / WORK WITH US
+═══════════════════════════════════════════════════════════ -->
+<section id="contact" class="py-32 overflow-hidden" :style="dark?'background:#111015':'background:white'">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
 
-      <!-- Info side -->
+      <!-- Info -->
       <div class="rv-left">
-        <div class="s-pill mb-5" x-text="C.contact.sectionLabel"></div>
-        <h2 class="ff-fraunces font-black leading-[1.1] mb-6 text-main"
-            style="font-size:clamp(2rem,4vw,3.2rem);">
-          <template x-for="(l,i) in C.contact.headline">
-            <span :class="i===1?'gt-coral':''" class="block" x-text="l"></span>
-          </template>
+        <div class="s-pill mb-5" x-text="T('ct_pill')"></div>
+        <h2 class="ff-fraunces font-black leading-[1.1] mb-6 text-main" style="font-size:clamp(2rem,4vw,3.2rem);">
+          <span class="block" x-text="T('ct_h2a')"></span>
+          <span class="block gt-coral" x-text="T('ct_h2b')"></span>
         </h2>
-        <p class="text-lg leading-relaxed mb-10 text-muted" x-text="C.contact.body"></p>
+        <p class="text-lg leading-relaxed mb-10 text-muted" x-text="T('ct_body')"></p>
 
         <!-- Contact pills -->
         <div class="space-y-4">
-          <template x-for="pill in C.contact.infoPills">
-            <div class="flex items-center gap-4 p-4 rounded-2xl tilt bg-card border-soft shadow-soft">
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(255,107,107,.1);" x-text="pill.icon"></div>
-              <div>
-                <div class="text-sm font-bold text-main" x-text="pill.label"></div>
-                <div class="text-sm" style="color:var(--coral);" x-text="pill.val"></div>
+          <template x-for="[lk, val, href] in [
+            ['ct_email', C.contact.email, 'mailto:'+C.contact.email],
+            ['ct_tg', C.contact.telegram, 'https://t.me/'+C.contact.telegram.replace('@','')],
+            ['ct_wa', C.contact.whatsapp, '#'],
+            ['ct_loc', C.contact.location, '']
+          ]">
+            <component :is="href?'a':'div'"
+                       :href="href||undefined"
+                       class="flex items-center gap-4 p-4 rounded-2xl tilt bg-card border-soft shadow-soft"
+                       style="text-decoration:none;">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                   style="background:rgba(255,107,107,.1);">
+                <span :x-text="['📧','💬','📱','🌴'][$index]" aria-hidden="true"></span>
               </div>
-            </div>
+              <div>
+                <div class="text-sm font-bold text-main" x-text="T(lk)"></div>
+                <div class="text-sm" style="color:var(--coral);" x-text="val"></div>
+              </div>
+            </component>
           </template>
         </div>
       </div>
 
-      <!-- Form side -->
+      <!-- Form (Formspree) -->
       <div class="rv-right"
            x-data="{
-             f:{name:'',brand:'',email:'',format:'',msg:''},
-             sent:false, loading:false,
+             name:'', brand:'', email:'', format:'', msg:'',
+             state:'idle',
              async submit(){
-               this.loading=true;
-               await new Promise(r=>setTimeout(r,700));
-               this.sent=true; this.loading=false;
+               if(!this.name||!this.brand||!this.email){return;}
+               this.state='loading';
+               try {
+                 const r = await fetch(C.settings.formspreeEndpoint, {
+                   method:'POST',
+                   headers:{'Content-Type':'application/json','Accept':'application/json'},
+                   body:JSON.stringify({name:this.name,brand:this.brand,email:this.email,format:this.format,message:this.msg})
+                 });
+                 this.state = r.ok ? 'success' : 'error';
+               } catch(e) { this.state='error'; }
              }
            }">
 
         <!-- Form card -->
-        <div x-show="!sent" x-transition:leave="opacity-0 scale-95 transition duration-300"
+        <div x-show="state!=='success'"
+             x-transition:leave="opacity-0 scale-95 transition duration-300"
              class="p-8 rounded-3xl bg-card border-soft shadow-soft">
-          <h3 class="ff-fraunces font-bold text-2xl mb-6 text-main">Collaboration Request</h3>
+          <h3 class="ff-fraunces font-bold text-2xl mb-6 text-main">
+            <span x-text="T('ct_h2a')"></span> <span x-text="T('ct_h2b')"></span>
+          </h3>
 
           <div class="space-y-5">
             <div>
-              <label class="block text-sm font-bold mb-1.5 text-main" x-text="C.contact.formFields.name.label"></label>
-              <input type="text" x-model="f.name" class="f-inp" :placeholder="C.contact.formFields.name.placeholder" />
+              <label class="block text-sm font-bold mb-1.5 text-main" x-text="T('f_name')"></label>
+              <input type="text" x-model="name" class="f-inp" :placeholder="T('f_name_ph')" autocomplete="name" required/>
             </div>
             <div>
-              <label class="block text-sm font-bold mb-1.5 text-main" x-text="C.contact.formFields.brand.label"></label>
-              <input type="text" x-model="f.brand" class="f-inp" :placeholder="C.contact.formFields.brand.placeholder" />
+              <label class="block text-sm font-bold mb-1.5 text-main" x-text="T('f_brand')"></label>
+              <input type="text" x-model="brand" class="f-inp" :placeholder="T('f_brand_ph')" autocomplete="organization"/>
             </div>
             <div>
-              <label class="block text-sm font-bold mb-1.5 text-main" x-text="C.contact.formFields.email.label"></label>
-              <input type="email" x-model="f.email" class="f-inp" :placeholder="C.contact.formFields.email.placeholder" />
+              <label class="block text-sm font-bold mb-1.5 text-main" x-text="T('f_email')"></label>
+              <input type="email" x-model="email" class="f-inp" :placeholder="T('f_email_ph')" autocomplete="email" required/>
             </div>
             <div>
-              <label class="block text-sm font-bold mb-1.5 text-main" x-text="C.contact.formFields.format.label"></label>
-              <select x-model="f.format" class="f-inp">
-                <option value="">Choose a format…</option>
-                <template x-for="opt in C.contact.formFields.format.options">
+              <label class="block text-sm font-bold mb-1.5 text-main" x-text="T('f_format')"></label>
+              <select x-model="format" class="f-inp">
+                <option value=""></option>
+                <template x-for="opt in T('f_formats')">
                   <option x-text="opt"></option>
                 </template>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-bold mb-1.5 text-main" x-text="C.contact.formFields.message.label"></label>
-              <textarea x-model="f.msg" class="f-inp resize-none" rows="4" :placeholder="C.contact.formFields.message.placeholder"></textarea>
+              <label class="block text-sm font-bold mb-1.5 text-main" x-text="T('f_msg')"></label>
+              <textarea x-model="msg" class="f-inp resize-none" rows="4" :placeholder="T('f_msg_ph')"></textarea>
             </div>
 
-            <button @click="submit()" :disabled="loading"
+            <!-- Error -->
+            <p x-show="state==='error'" class="text-sm font-bold" style="color:var(--coral);" x-text="T('f_err')"></p>
+
+            <button @click="submit()" :disabled="state==='loading'"
                     class="w-full py-4 rounded-2xl font-bold text-white text-lg transition-all duration-300"
-                    :class="loading?'opacity-80':'hover:scale-[1.02] hover:-translate-y-1'"
+                    :class="state==='loading'?'opacity-75':'hover:scale-[1.02] hover:-translate-y-1'"
                     style="background:linear-gradient(135deg,var(--coral),var(--pink));box-shadow:0 14px 40px rgba(255,107,107,.32);">
-              <span x-show="!loading" x-text="C.contact.submitLabel"></span>
-              <span x-show="loading">Sending…</span>
+              <span x-text="state==='loading'?T('f_sending'):T('f_submit')"></span>
             </button>
           </div>
         </div>
 
-        <!-- Success state -->
-        <div x-show="sent"
+        <!-- Success -->
+        <div x-show="state==='success'"
              x-transition:enter="opacity-0 scale-90 transition-all duration-500"
              x-transition:enter-end="opacity-100 scale-100"
              class="p-14 rounded-3xl text-center bg-card border-soft shadow-soft">
-          <div class="text-6xl mb-4" style="animation:imgFloat 1s cubic-bezier(.34,1.56,.64,1) both;">🎉</div>
-          <h3 class="ff-fraunces font-bold text-2xl mb-3 text-main" x-text="C.contact.successTitle"></h3>
-          <p class="text-muted" x-text="C.contact.successBody"></p>
+          <div class="text-6xl mb-4" aria-hidden="true">🎉</div>
+          <h3 class="ff-fraunces font-bold text-2xl mb-3 text-main" x-text="T('f_ok_title')"></h3>
+          <p class="text-muted" x-text="T('f_ok_body')"></p>
         </div>
-
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     9. SHOP
-═══════════════════════════════════════════════════════ -->
-<section id="shop" class="py-32 overflow-hidden"
-         :style="theme==='dark'?'background:var(--bg-d)':'background:#FFFAF4'">
+<!-- ═══════════════════════════════════════════════════════════
+     SHOP
+═══════════════════════════════════════════════════════════ -->
+<section id="shop" class="py-32 overflow-hidden" :style="dark?'background:var(--bg-d)':'background:#FFFAF4'">
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center mb-16 rv-up">
-      <div class="s-pill mb-4 mx-auto w-fit">🛍️ Merch & Goodies</div>
+      <div class="s-pill mb-4 mx-auto w-fit" x-text="T('shop_pill')"></div>
       <h2 class="ff-fraunces font-black text-main" style="font-size:clamp(2rem,5vw,3.8rem);">
-        The <span class="gt-warm">Shop</span>
+        <span x-text="T('shop_h2a')"></span><span class="gt-warm" x-text="T('shop_h2b')"></span>
       </h2>
     </div>
-
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stg">
-      <template x-for="item in C.shop">
+      <template x-for="(item,i) in C.shop">
         <div class="shop-card rv-up tilt bg-card border-soft relative">
-          <!-- Coming soon overlay -->
           <template x-if="item.coming">
-            <div class="absolute inset-0 z-20 flex items-center justify-center rounded-3xl" style="background:rgba(14,11,20,.6);backdrop-filter:blur(7px);">
+            <div class="absolute inset-0 z-20 flex items-center justify-center rounded-3xl"
+                 style="background:rgba(14,11,20,.6);backdrop-filter:blur(6px);">
               <div class="text-center">
-                <div class="ff-fraunces font-black text-2xl text-white mb-1">Coming Soon</div>
-                <div class="text-sm ff-caveat" style="color:var(--gold);font-size:1.2rem;">Stay tuned 🌴</div>
+                <div class="ff-fraunces font-black text-2xl text-white mb-1" x-text="T('shop_soon')"></div>
+                <div class="ff-caveat text-xl" style="color:var(--gold);">🌴</div>
               </div>
             </div>
           </template>
-
           <div class="shop-img">
-            <img :src="item.img" :alt="item.name" />
+            <img :src="C.images.shop[item.imgIdx]"
+                 :alt="(lang==='ru'?item.ru:item.en)+' — Vasilisa Yummy shop'"
+                 loading="lazy" width="400" height="220"/>
           </div>
           <div class="p-5">
-            <div class="flex items-start justify-between mb-2 gap-2">
-              <span class="ff-caveat text-base px-3 py-0.5 rounded-full"
-                    :style="item.tag==='Bestseller'?`background:rgba(255,107,107,.1);color:var(--coral)`:
-                             item.tag==='New'?`background:rgba(0,212,200,.1);color:var(--turq)`:
-                             `background:rgba(255,212,59,.12);color:var(--mango)`"
-                    x-text="item.tag"></span>
-            </div>
-            <h3 class="font-bold text-base mb-2 text-main" x-text="item.name"></h3>
+            <span class="ff-caveat text-base px-3 py-0.5 rounded-full"
+                  :style="(lang==='ru'?item.tag_ru:item.tag_en)==='Bestseller'||(lang==='ru'?item.tag_ru:item.tag_en)==='Хит'
+                    ?`background:rgba(255,107,107,.1);color:var(--coral)`
+                    :(lang==='ru'?item.tag_ru:item.tag_en)==='New'||(lang==='ru'?item.tag_ru:item.tag_en)==='Новинка'
+                    ?`background:rgba(0,212,200,.1);color:var(--turq)`
+                    :`background:rgba(255,212,59,.12);color:var(--mango)`"
+                  x-text="lang==='ru'?item.tag_ru:item.tag_en"></span>
+            <h3 class="font-bold text-base mt-2 mb-2 text-main" x-text="lang==='ru'?item.ru:item.en"></h3>
             <div class="flex items-center justify-between mt-4">
               <span class="ff-fraunces font-black text-xl" style="color:var(--coral);" x-text="item.price"></span>
               <button class="w-10 h-10 rounded-full flex items-center justify-center text-xl text-white transition-all duration-300 hover:scale-125 hover:rotate-90"
-                      style="background:linear-gradient(135deg,var(--coral),var(--pink));">+</button>
+                      style="background:linear-gradient(135deg,var(--coral),var(--pink));"
+                      :aria-label="'Add '+((lang==='ru'?item.ru:item.en))+' to cart'">+</button>
             </div>
           </div>
         </div>
@@ -1220,23 +1455,22 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     10. COMING SOON
-═══════════════════════════════════════════════════════ -->
-<section id="coming" class="py-24"
-         :style="theme==='dark'?'background:#111015':'background:white'">
+<!-- ═══════════════════════════════════════════════════════════
+     COMING SOON
+═══════════════════════════════════════════════════════════ -->
+<section id="coming" class="py-24" :style="dark?'background:#111015':'background:white'">
   <div class="max-w-7xl mx-auto px-6">
     <div class="text-center mb-14 rv-up">
-      <div class="s-pill mb-4 mx-auto w-fit">🚧 In Development</div>
+      <div class="s-pill mb-4 mx-auto w-fit" x-text="T('cs_pill')"></div>
       <h2 class="ff-fraunces font-black text-main" style="font-size:clamp(1.8rem,4vw,3rem);">
-        What's <span class="gt-trio">Coming</span> Next
+        <span x-text="T('cs_h2a')"></span><span class="gt-trio" x-text="T('cs_h2b')"></span>
       </h2>
     </div>
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 stg">
-      <template x-for="item in C.comingSoon">
-        <div class="cs-card rv-up p-8 bg-card" :style="theme==='dark'?'border-color:rgba(255,107,107,.22)':'border-color:rgba(255,107,107,.25)'">
-          <div class="text-4xl mb-4" x-text="item.icon"></div>
+      <template x-for="item in T('cs_items')">
+        <div class="cs-card rv-up p-8 bg-card"
+             :style="dark?'border-color:rgba(255,107,107,.22)':'border-color:rgba(255,107,107,.25)'">
+          <div class="text-4xl mb-4" x-text="item.icon" aria-hidden="true"></div>
           <h3 class="ff-fraunces font-bold text-xl mb-2 text-main" x-text="item.title"></h3>
           <p class="text-sm leading-relaxed text-muted" x-text="item.desc"></p>
         </div>
@@ -1245,47 +1479,69 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     11. FOOTER
-═══════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════ -->
 <footer style="background:#0E0B14;" class="py-16 text-white">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
 
+      <!-- Brand -->
       <div>
-        <div class="flex items-center gap-2.5 mb-4">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-               style="background:linear-gradient(135deg,var(--coral),var(--pink));">🍜</div>
-          <span class="ff-fraunces font-bold text-xl">Vasilisa<span class="gt-coral">.eats</span></span>
-        </div>
+        <a href="#hero" class="flex items-center gap-2.5 mb-4" aria-label="Vasilisa Yummy Home">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+               style="background:linear-gradient(135deg,var(--coral),var(--pink));">
+            <!-- Tiny panda icon -->
+            <svg viewBox="0 0 32 32" fill="none" width="22" height="22" aria-hidden="true">
+              <circle cx="16" cy="14" r="9" fill="white"/>
+              <circle cx="9" cy="8" r="4" fill="#1a1a1a"/>
+              <circle cx="23" cy="8" r="4" fill="#1a1a1a"/>
+              <ellipse cx="13" cy="13" rx="3" ry="2.5" fill="#1a1a1a"/>
+              <ellipse cx="19" cy="13" rx="3" ry="2.5" fill="#1a1a1a"/>
+              <circle cx="13" cy="13" r="1.2" fill="white"/>
+              <circle cx="19" cy="13" r="1.2" fill="white"/>
+              <ellipse cx="16" cy="16" rx="1.5" ry="1.1" fill="#FF6B6B"/>
+            </svg>
+          </div>
+          <span class="ff-fraunces font-bold text-xl">Vasilisa<span class="gt-coral"> Yummy</span></span>
+        </a>
         <p class="text-sm leading-relaxed" style="color:rgba(255,255,255,.45);">
           Phuket's youngest & most honest food critic. 8 years old. 200+ restaurants. Zero filter.
         </p>
       </div>
 
+      <!-- Links -->
       <div>
-        <h4 class="font-bold mb-4" style="color:var(--gold);">Quick Links</h4>
-        <div class="space-y-2">
-          <template x-for="[href,label] in [['#about','About'],['#achievements','Stats'],['#mediakit','Media Kit'],['#shop','Shop'],['#contact','Work With Us']]">
-            <a :href="href" x-text="label" class="block text-sm transition-colors hover:text-white" style="color:rgba(255,255,255,.45);"></a>
-          </template>
-        </div>
+        <h4 class="font-bold mb-4" style="color:var(--gold);" x-text="T('ft_links')"></h4>
+        <nav aria-label="Footer navigation">
+          <div class="space-y-2">
+            <a href="#about"        x-text="T('nav_about')"   class="block text-sm transition-colors hover:text-white" style="color:rgba(255,255,255,.45);"></a>
+            <a href="#achievements" x-text="T('nav_stats')"   class="block text-sm transition-colors hover:text-white" style="color:rgba(255,255,255,.45);"></a>
+            <a href="#mediakit"     x-text="T('nav_mediakit')" class="block text-sm transition-colors hover:text-white" style="color:rgba(255,255,255,.45);"></a>
+            <a href="#shop"         x-text="T('nav_shop')"    class="block text-sm transition-colors hover:text-white" style="color:rgba(255,255,255,.45);"></a>
+            <a href="#contact"      x-text="T('nav_collab')"  class="block text-sm transition-colors hover:text-white" style="color:rgba(255,255,255,.45);"></a>
+          </div>
+        </nav>
       </div>
 
+      <!-- Contact + socials -->
       <div>
-        <h4 class="font-bold mb-4" style="color:var(--gold);">Contact</h4>
-        <div class="space-y-2 text-sm" style="color:rgba(255,255,255,.45);">
-          <template x-for="pill in C.contact.infoPills">
-            <p><span x-text="pill.icon"></span> <span x-text="pill.val"></span></p>
-          </template>
-        </div>
-        <!-- Social icons row -->
-        <div class="flex gap-3 mt-5">
+        <h4 class="font-bold mb-4" style="color:var(--gold);" x-text="T('ft_contact')"></h4>
+        <address class="not-italic space-y-1.5 text-sm mb-5" style="color:rgba(255,255,255,.45);">
+          <p>📧 <span x-text="C.contact.email"></span></p>
+          <p>💬 <span x-text="C.contact.telegram"></span></p>
+          <p>🌴 <span x-text="C.contact.location"></span></p>
+        </address>
+        <div class="flex gap-3" role="list" aria-label="Social media links">
           <template x-for="s in C.socials">
-            <a :href="s.url" target="_blank" rel="noopener"
+            <a :href="C.socialLinks[s.urlKey]" target="_blank" rel="noopener noreferrer"
+               role="listitem"
                class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-               style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);">
-              <span class="text-white opacity-80 w-5 h-5 flex items-center justify-center" x-html="s.iconSvg.replace('width=&quot;36&quot;','width=&quot;18&quot;').replace('height=&quot;36&quot;','height=&quot;18&quot;')"></span>
+               style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);"
+               :aria-label="s.name">
+              <span class="text-white opacity-80 w-5 h-5 flex items-center justify-center"
+                    x-html="s.icon.replace(/width=.36./g,'width=&quot;18&quot;').replace(/height=.36./g,'height=&quot;18&quot;')"
+                    aria-hidden="true"></span>
             </a>
           </template>
         </div>
@@ -1293,99 +1549,274 @@
     </div>
 
     <div class="border-t pt-8 flex flex-col sm:flex-row items-center justify-between gap-3" style="border-color:rgba(255,255,255,.07);">
-      <p class="text-xs" style="color:rgba(255,255,255,.28);" x-text="C.footer.copy"></p>
-      <p class="ff-caveat text-lg" style="color:rgba(255,255,255,.35);" x-text="C.footer.tagline"></p>
+      <p class="text-xs" style="color:rgba(255,255,255,.28);" x-text="T('ft_copy')"></p>
+      <p class="ff-caveat text-lg" style="color:rgba(255,255,255,.35);" x-text="T('ft_tag')"></p>
     </div>
   </div>
 </footer>
 
-<!-- ═══════════════════════════════════════════════════════
-     ALPINE.JS APP DEFINITION
-═══════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     ALPINE.JS APP
+═══════════════════════════════════════════════════════════ -->
 <script>
-  document.addEventListener('alpine:init', () => {
+document.addEventListener('alpine:init', () => {
 
-    /* ── Main app ── */
-    Alpine.data('VasilisaApp', () => ({
-      C:       window.SITE_CONFIG,
-      theme:   window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-      scrolled: false,
-      lang:    'en',   /* ready for i18n expansion */
-    }));
+  /* ── Animated counter component ── */
+  Alpine.data('ctr', rawVal => ({
+    display: rawVal, started: false,
+    go() {
+      if (this.started) return;
+      this.started = true;
+      const raw = String(rawVal);
+      const num = parseFloat(raw.replace(/[^0-9.]/g,''));
+      const sfx = raw.replace(/[0-9.]/g,'');
+      const dur = 1700, t0 = performance.now();
+      const tick = now => {
+        const p = Math.min((now-t0)/dur,1);
+        const e = 1-Math.pow(2,-10*p);
+        const v = num*e;
+        this.display = (Number.isInteger(num)?Math.round(v):v.toFixed(1))+sfx;
+        if(p<1) requestAnimationFrame(tick); else this.display=rawVal;
+      };
+      requestAnimationFrame(tick);
+    },
+  }));
 
-    /* ── Animated counter ── */
-    Alpine.data('ctrComp', (rawVal) => ({
-      display: rawVal,
-      started: false,
-      startCtr() {
-        if (this.started) return;
-        this.started = true;
-        const raw    = String(rawVal);
-        const num    = parseFloat(raw.replace(/[^0-9.]/g,''));
-        const suffix = raw.replace(/[0-9.]/g,'');
-        const dur    = 1700;
-        const t0     = performance.now();
-        const tick   = (now) => {
-          const p   = Math.min((now - t0) / dur, 1);
-          const ease = 1 - Math.pow(2, -10 * p);
-          const cur  = num * ease;
-          this.display = (Number.isInteger(num) ? Math.round(cur) : cur.toFixed(1)) + suffix;
-          if (p < 1) requestAnimationFrame(tick);
-          else this.display = rawVal;
-        };
-        requestAnimationFrame(tick);
-      },
-    }));
+  /* ── Main App ── */
+  Alpine.data('App', () => ({
+    C:       window.SITE_CONFIG,
+    lang:    localStorage.getItem('vy_lang') || window.SITE_CONFIG.settings.defaultLang,
+    dark:    localStorage.getItem('vy_dark')==='1' ||
+             (localStorage.getItem('vy_dark')===null && window.matchMedia('(prefers-color-scheme:dark)').matches),
+    scrolled:false,
 
-  });
+    /* ── Translation helper ── */
+    T(key) {
+      const d = this.C.i18n[this.lang];
+      return (d && d[key] !== undefined) ? d[key] : (this.C.i18n.en[key] || key);
+    },
+
+    /* ── Boot: apply CSS vars, update SEO tags ── */
+    boot() {
+      /* Apply color tokens */
+      const clr = this.C.colors;
+      const map = {
+        coral:clr.coral,turq:clr.turq,pink:clr.pink,purple:clr.purple,
+        gold:clr.gold,mango:clr.mango,lime:clr.lime,
+        'bg-l':clr.bgLight,'bg-d':clr.bgDark,
+        'card-l':clr.cardLight,'card-d':clr.cardDark,
+        'text-l':clr.textLight,'text-d':clr.textDark,
+      };
+      Object.entries(map).forEach(([k,v])=>document.documentElement.style.setProperty(`--${k}`,v));
+
+      /* Initial SEO update */
+      this.updateSEO();
+
+      /* Persist prefs */
+      this.$watch('dark', v => localStorage.setItem('vy_dark', v?'1':'0'));
+      this.$watch('lang', () => { this.updateSEO(); localStorage.setItem('vy_lang', this.lang); });
+
+      /* Tilt effect on .tilt elements */
+      this.$nextTick(() => {
+        document.querySelectorAll('.tilt').forEach(el => {
+          el.addEventListener('mousemove', e => {
+            const r=el.getBoundingClientRect();
+            const x=(e.clientY-r.top-r.height/2)/(r.height/2)*8;
+            const y=(e.clientX-r.left-r.width/2)/(r.width/2)*-8;
+            el.style.transform=`perspective(700px) rotateX(${x}deg) rotateY(${y}deg) translateY(-8px)`;
+          });
+          el.addEventListener('mouseleave',()=>el.style.transform='');
+        });
+      });
+    },
+
+    /* ── Language switcher ── */
+    switchLang(l) {
+      this.lang = l;
+    },
+
+    /* ── Dynamic SEO meta updates ── */
+    updateSEO() {
+      const t = this.T('meta_title');
+      const d = this.T('meta_desc');
+      document.documentElement.lang = this.lang;
+      document.getElementById('pg-title').textContent   = t;
+      document.getElementById('pg-desc').content         = d;
+      document.getElementById('og-title').content        = t;
+      document.getElementById('og-description').content  = d;
+      document.getElementById('tw-title').content        = t;
+      document.getElementById('tw-desc').content         = d;
+    },
+
+    /* ══════════════════════════════════════════════════════════════
+       jsPDF MEDIA KIT GENERATOR
+       Builds a 4-page vivid tropical PDF from SITE_CONFIG data.
+    ══════════════════════════════════════════════════════════════ */
+    generatePDF() {
+      if (!window.jspdf) { alert('PDF library loading, please try again.'); return; }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+      const W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
+      const C=this.C; const isEN=this.lang==='en';
+
+      /* ─ helpers ─ */
+      const fill   = (...rgb)           => { doc.setFillColor(...rgb); };
+      const stroke = (...rgb)           => { doc.setDrawColor(...rgb); };
+      const fc     = (sz,bold,clr=[0,0,0]) => { doc.setFontSize(sz); doc.setFont('helvetica',bold?'bold':'normal'); doc.setTextColor(...clr); };
+      const rr     = (x,y,w,h,r,mode)  => doc.roundedRect(x,y,w,h,r,r,mode||'F');
+
+      /* ═════════════════ PAGE 1: VIVID COVER ═════════════════ */
+      fill(255,107,107);  doc.rect(0,0,W,H,'F');
+      fill(255,78,156);   doc.circle(W+20,-20,80,'F');
+      fill(155,77,255);   doc.circle(-20,H+20,60,'F');
+      fill(255,212,59,0.4);doc.circle(W/2,H/2,100,'F');
+      fill(255,82,82,0.25);doc.circle(20,H-40,50,'F');
+      fill(0,212,200,0.18);doc.circle(W-25,H/3,40,'F');
+
+      /* White frosted card */
+      fill(255,255,255,0.16); rr(12,32,W-24,H-64,12,'F');
+
+      /* Brand name */
+      fc(10,true,[255,255,255]); doc.text('VASILISA YUMMY  ·  MEDIA KIT 2025', W/2, 28, {align:'center'});
+      fc(40,true,[255,255,255]);
+      doc.text('Vasilisa',  W/2, 70, {align:'center'});
+      doc.text('Chugunova', W/2, 88, {align:'center'});
+      fc(14,false,[255,255,255,0.9]);
+      doc.text(isEN?"Phuket's Youngest Food Critic":"Самый молодой ресторанный критик", W/2, 100, {align:'center'});
+
+      /* Divider */
+      stroke(255,255,255,0.45); doc.setLineWidth(.5);
+      doc.line(30,106,W-30,106);
+
+      /* Media Kit title */
+      fc(26,true,[255,255,255]);
+      doc.text(isEN?'MEDIA KIT 2025':'МЕДИАКИТ 2025', W/2, 120, {align:'center'});
+
+      /* Stats mini-cards */
+      const sts=[
+        {v:'47K+',l:isEN?'Followers':'Подписчиков'},
+        {v:'200+',l:isEN?'Restaurants':'Ресторанов'},
+        {v:'8.4%',l:isEN?'Engagement':'Вовлечённость'},
+        {v:'28',  l:isEN?'Cities':'Городов'},
+      ];
+      const bW=39,bH=24,bG=4;
+      const bX=(W-(sts.length*(bW+bG)-bG))/2;
+      sts.forEach((s,i)=>{
+        const x=bX+i*(bW+bG);
+        fill(255,255,255,0.22); rr(x,132,bW,bH,4,'F');
+        fc(15,true,[255,255,255]); doc.text(s.v,x+bW/2,132+11,{align:'center'});
+        fc(7,false,[255,255,255]); doc.text(s.l,x+bW/2,132+20,{align:'center'});
+      });
+
+      /* Quote */
+      fc(13,false,[255,255,255]);
+      const q=isEN?'"If it\'s bad — I\'ll say it\'s bad."':'"Если невкусно — скажу, что невкусно."';
+      doc.text(q,W/2,170,{align:'center'});
+      fc(10,false,[255,255,255,0.7]);
+      doc.text(isEN?'— Vasilisa, Age 8':'— Василиса, 8 лет',W/2,179,{align:'center'});
+
+      /* Contact footer strip */
+      fill(0,0,0,0.22); doc.rect(0,H-28,W,28,'F');
+      fc(11,true,[255,255,255]);
+      doc.text(C.contact.email,W/2,H-17,{align:'center'});
+      fc(9,false,[255,255,255,0.7]);
+      doc.text('Phuket, Thailand  ·  '+C.contact.telegram,W/2,H-9,{align:'center'});
+
+      /* ═════════════════ PAGE 2: SOCIAL MEDIA ═════════════════ */
+      doc.addPage();
+      fill(255,248,244); doc.rect(0,0,W,H,'F');
+      fill(255,107,107); doc.rect(0,0,W,22,'F');
+      fc(12,true,[255,255,255]); doc.text(isEN?'SOCIAL MEDIA PERFORMANCE':'ПОКАЗАТЕЛИ В СОЦСЕТЯХ',W/2,14,{align:'center'});
+
+      let yy=32;
+      fc(20,true,[28,16,32]); doc.text(isEN?'Social Media Breakdown':'Соцсети',14,yy); yy+=14;
+
+      const sClrs={YouTube:[255,0,51],Instagram:[131,58,180],TikTok:[1,1,1],Facebook:[24,119,242]};
+      C.socials.forEach(s=>{
+        const col=sClrs[s.name]||[255,107,107];
+        fill(...col); rr(14,yy,W-28,30,5,'F');
+        fc(13,true,[255,255,255]); doc.text(s.name,22,yy+11);
+        fc(8,false,[255,255,255]); doc.text(s.handle,22,yy+21);
+        fc(16,true,[255,255,255]); doc.text(s.followers,W-64,yy+13);
+        fc(7,false,[255,255,255]); doc.text(isEN?'followers':'подписчиков',W-64,yy+21);
+        fc(13,true,[255,255,255]); doc.text(s.engagement,W-24,yy+13,{align:'right'});
+        fc(7,false,[255,255,255]); doc.text('ER',W-24,yy+21,{align:'right'});
+        yy+=36;
+      });
+
+      /* ═════════════════ PAGE 3: AUDIENCE ═════════════════ */
+      doc.addPage();
+      fill(255,248,244); doc.rect(0,0,W,H,'F');
+      fill(155,77,255); doc.rect(0,0,W,22,'F');
+      fc(12,true,[255,255,255]); doc.text(isEN?'AUDIENCE & DEMOGRAPHICS':'АУДИТОРИЯ',W/2,14,{align:'center'});
+
+      yy=34;
+      fc(18,true,[28,16,32]); doc.text(isEN?'Audience Split':'Аудитория',14,yy); yy+=12;
+
+      fc(10,true,[100,80,120]); doc.text(isEN?'Geography':'География',14,yy); yy+=8;
+      C.mediakit.audience.forEach(seg=>{
+        fc(8,false,[80,60,100]); doc.text(seg.label,14,yy+5);
+        fill(220,210,230); rr(58,yy,100,7,2,'F');
+        fill(...seg.color); rr(58,yy,seg.pct,7,2,'F');
+        fc(8,true,[80,60,100]); doc.text(seg.pct+'%',162,yy+6);
+        yy+=13;
+      });
+
+      yy+=8;
+      fc(10,true,[100,80,120]); doc.text(isEN?'Age Breakdown':'Возраст',14,yy); yy+=8;
+      C.mediakit.ageGroups.forEach(ag=>{
+        fc(8,false,[80,60,100]); doc.text(ag.range,14,yy+5);
+        fill(220,210,230); rr(44,yy,100,7,2,'F');
+        fill(255,107,107); rr(44,yy,ag.pct*2,7,2,'F');
+        fc(8,true,[80,60,100]); doc.text(ag.pct+'%',148,yy+6);
+        yy+=13;
+      });
+
+      yy+=6;
+      fill(255,212,59,0.18); rr(14,yy,W-28,16,4,'F');
+      fc(9,true,[100,70,0]);
+      doc.text(C.mediakit.cpmText+(isEN?' starting':''),W/2,yy+11,{align:'center'});
+
+      /* ═════════════════ PAGE 4: FORMATS & CASES ═════════════════ */
+      doc.addPage();
+      fill(255,248,244); doc.rect(0,0,W,H,'F');
+      fill(255,78,156); doc.rect(0,0,W,22,'F');
+      fc(12,true,[255,255,255]); doc.text(isEN?'FORMATS & CASE STUDIES':'ФОРМАТЫ И КЕЙСЫ',W/2,14,{align:'center'});
+
+      yy=34;
+      fc(18,true,[28,16,32]); doc.text(isEN?'Collaboration Formats':'Форматы',14,yy); yy+=12;
+      const fmts=isEN?C.mediakit.formats_en:C.mediakit.formats_ru;
+      fmts.forEach((f,i)=>{
+        const c2=[[255,107,107],[255,78,156],[155,77,255],[0,212,200],[255,212,59],[127,217,87]];
+        fill(...(c2[i]||[255,107,107])); rr(14,yy,W-28,13,3,'F');
+        fc(9,true,[255,255,255]); doc.text(f,22,yy+9);
+        yy+=18;
+      });
+
+      yy+=6;
+      fc(18,true,[28,16,32]); doc.text(isEN?'Success Stories':'Кейсы',14,yy); yy+=12;
+      C.mediakit.successCases.forEach(cs=>{
+        fill(255,107,107,0.08); rr(14,yy,W-28,26,4,'F');
+        stroke(255,107,107); doc.setLineWidth(.5); rr(14,yy,W-28,26,4,'D');
+        fc(10,true,[80,30,80]); doc.text(cs.brand,22,yy+11);
+        fc(8,false,[100,60,100]); doc.text(isEN?cs.en:cs.ru,22,yy+20);
+        yy+=32;
+      });
+
+      /* Footer on every page */
+      for(let p=1;p<=4;p++){
+        doc.setPage(p);
+        doc.setFontSize(7.5); doc.setTextColor(160,140,160);
+        doc.text(`Vasilisa Yummy  ·  ${C.contact.email}  ·  Phuket, Thailand`,W/2,H-7,{align:'center'});
+      }
+
+      doc.save(C.mediakit.pdfFilename);
+    },
+
+  }));
+
+});
 </script>
 
 </body>
 </html>
-
-<!-- ╔══════════════════════════════════════════════════════════════╗
-     ║             CUSTOMISATION GUIDE                              ║
-     ╠══════════════════════════════════════════════════════════════╣
-     ║                                                              ║
-     ║  1. CONTENT & COLORS — window.SITE_CONFIG (top of file)      ║
-     ║     All text, links, stats, social handles, shop items and   ║
-     ║     colors live in window.SITE_CONFIG. Edit values there.    ║
-     ║     Colors automatically flow into CSS variables at runtime. ║
-     ║                                                              ║
-     ║  2. PHOTOS                                                   ║
-     ║     Replace Unsplash URLs in CONFIG (hero.photo,             ║
-     ║     about.photos, shop[x].img) with real hosted images.      ║
-     ║     Recommended host: Cloudinary, Bunny CDN, or imgix.       ║
-     ║                                                              ║
-     ║  3. MEDIA KIT DOWNLOAD                                       ║
-     ║     Set CONFIG.mediakit.downloadUrl to your PDF URL.         ║
-     ║     The <a> tag already has the download attribute.          ║
-     ║                                                              ║
-     ║  4. CONTACT FORM                                             ║
-     ║     Replace the fake timeout in submit() with a real API:    ║
-     ║     Formspree: fetch('https://formspree.io/f/YOUR_KEY',...)  ║
-     ║     or EmailJS / Netlify Forms / custom backend.             ║
-     ║                                                              ║
-     ║  5. DARK / LIGHT THEME                                       ║
-     ║     Defaults to browser prefers-color-scheme.                ║
-     ║     Toggle button in the nav flips the Alpine 'theme' var.   ║
-     ║                                                              ║
-     ║  6. LANGUAGE SWITCHER (RU)                                   ║
-     ║     Currently visual-only. To activate:                      ║
-     ║     a) Add a SITE_CONFIG_RU object with same structure.      ║
-     ║     b) In VasilisaApp(), switch C between both objects       ║
-     ║        when lang changes: this.C = lang==='ru' ? ... : ...   ║
-     ║     c) All x-text and x-bind bindings update automatically.  ║
-     ║                                                              ║
-     ║  7. COLORS                                                   ║
-     ║     Edit CONFIG.colors — they auto-apply as CSS vars.        ║
-     ║     Key vars: --coral --turq --pink --purple --gold --mango. ║
-     ║                                                              ║
-     ║  8. SOCIAL ICON SVGs                                         ║
-     ║     Each social in CONFIG.socials has an iconSvg string.     ║
-     ║     Paste any inline SVG string to update icons.             ║
-     ║                                                              ║
-     ║  9. SHOP COMING SOON                                         ║
-     ║     Set item.coming = false to reveal a product card.        ║
-     ║                                                              ║
-     ╚══════════════════════════════════════════════════════════════╝ -->
